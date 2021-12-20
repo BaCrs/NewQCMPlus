@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="main-fragment(title, content, js)" 
+xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+	<title th:replace="${title}">New QCM Plus</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/main.css}" href="../../static/main.css" />
+</head>
+<body>
+	<header>
+		<nav>
+			<ul>
+				<li sec:authorize="hasAuthority('ADMIN')"><a href="/user">Utilisateurs</a></li>
+				<li><a href="/quiz">Questionnaires</a></li>
+			</ul>
+		</nav>
+		<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+		    <input type="submit" value="Logout" />
+		</form>
+	</header>
+	<!-- 
+	<span sec:authentication="name">Username</span>
+	<span sec:authentication="principal.authorities">Roles</span>
+	-->
+	
+	<section th:insert="${content} ?: ~{}"></section>
+	<th:block th:replace="${js} ?: ~{}"></th:block>
+</body>
+</html>
