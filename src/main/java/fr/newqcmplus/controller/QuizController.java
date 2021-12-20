@@ -1,6 +1,8 @@
 package fr.newqcmplus.controller;
 
+import fr.newqcmplus.entity.*;
 import fr.newqcmplus.security.CustomUserDetails;
+import fr.newqcmplus.service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -13,11 +15,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import fr.newqcmplus.entity.Quiz;
 import fr.newqcmplus.service.QuizService;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/quiz")
@@ -26,7 +30,8 @@ public class QuizController {
 	@Autowired
 	private QuizService quizService;
 
-	private Instant start;
+	@Autowired
+	private ResultService resultService;
 	
 	@GetMapping("")
 	public String showAllQuizzes(Model model) {
@@ -58,20 +63,46 @@ public class QuizController {
 	}
 
 	@GetMapping("/do")
-	public String doQuiz(@RequestParam int id, Model model) {
-		model.addAttribute("listOfQuizzes", quuestionService)
-		//start = Instant.now();
+	public String doQuiz(@RequestParam int quizId, @ModelAttribute Result result) {
+		result.setQuiz(quizService.findQuizById(quizId));
+		result.setDateDebut(new Date());
 		return "do-quiz";
 	}
 
 	@PostMapping("/do")
-	public String saveQuizAnswers(@RequestParam int id, Model model) {
+	public String saveQuizAnswers(@RequestParam int quizId, @ModelAttribute Result result) {
+		result.setUser(this.getAuthenticatedUser());
+		result.setDateFin(new Date());
+		Quiz originalQuiz = quizService.findQuizById(quizId);
+		List<Answer> answers = new ArrayList<>();
+		for (Question question : originalQuiz.getQuestions()) {
+			for (Item item : question.getItems()) {
+				Answer answer = new Answer();
+				answer.setItem(item);
+				Item formItem = this.findItemInResult(result, item.getId());
+				answer.setResponse(formItem.isResponse());
+				answers.add(answer);
+			}
+		}
+		result.setAnswers(answers);
+		result.setQuiz(originalQuiz);
+		resultService.save(result);
+		return "redirect:/quiz";
+	}
+
+	private Item findItemInResult(Result result, int itemId) {
+		for (Question question : result.getQuiz().getQuestions()) {
+			for (Item item : question.getItems()) {
+				if (item.getId() == itemId) return item;
+			}
+		}
+		return null;
+	}
+
+	private User getAuthenticatedUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-		int userId = customUserDetails.getUserId();
-		long timeElapsed = Duration.between(start, Instant.now()).toSeconds();
-		System.out.println(timeElapsed);
-		return "/quiz";
+		return customUserDetails.getUser();
 	}
 	
 }

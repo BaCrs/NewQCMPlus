@@ -15,9 +15,14 @@ import fr.newqcmplus.entity.Item;
 import fr.newqcmplus.entity.Question;
 import fr.newqcmplus.service.QuestionService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequestMapping("/question")
 public class QuestionController {
+
+	private static final int MAX_QUESTION_ITEMS = 5;
 
 	@Autowired
 	private  QuestionService questionService;
@@ -32,6 +37,13 @@ public class QuestionController {
 	@GetMapping("/create")
 	public String showQuestionCreateForm(@RequestParam int quizId, Model model, @ModelAttribute Question question) {
 		model.addAttribute("quizId", quizId);
+		List<Item> items = new ArrayList<>();
+		for (int i = 0; i < MAX_QUESTION_ITEMS; i++) {
+			Item item = new Item();
+			if (i == 0) item.setResponse(true);
+			items.add(item);
+		}
+		question.setItems(items);
 		return "add-question";	
 	}
 	

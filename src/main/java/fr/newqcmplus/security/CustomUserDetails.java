@@ -5,13 +5,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import fr.newqcmplus.entity.Authority;
 import fr.newqcmplus.entity.User;
- 
+
+@Getter
 public class CustomUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
