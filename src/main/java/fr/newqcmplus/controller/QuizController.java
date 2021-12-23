@@ -64,13 +64,21 @@ public class QuizController {
 
 	@GetMapping("/do")
 	public String doQuiz(@RequestParam int quizId, @ModelAttribute Result result) {
-		result.setQuiz(quizService.findQuizById(quizId));
+		Quiz quiz = quizService.findQuizById(quizId);
+		// On cache les bonnes réponses du questionnaire.
+		for (Question question : quiz.getQuestions()) {
+			for (Item item : question.getItems()) {
+				item.setResponse(false);
+			}
+		}
+		result.setQuiz(quiz);
 		result.setDateDebut(new Date());
 		return "do-quiz";
 	}
 
 	@PostMapping("/do")
 	public String saveQuizAnswers(@RequestParam int quizId, @ModelAttribute Result result) {
+		// TODO : indiquer dans la base si le stagiaire n'a pas du tout répondu à la question.
 		result.setUser(this.getAuthenticatedUser());
 		result.setDateFin(new Date());
 		Quiz originalQuiz = quizService.findQuizById(quizId);
@@ -87,7 +95,15 @@ public class QuizController {
 		result.setAnswers(answers);
 		result.setQuiz(originalQuiz);
 		resultService.save(result);
-		return "redirect:/quiz";
+		return "close-quiz";
+	}
+
+	@GetMapping("results")
+	public String showQuizResults(@RequestParam int quizId, Model model) {
+		Quiz quiz = quizService.findQuizById(quizId);
+		List<Result> listOfResults = resultService.findResultsByUserAndQuiz(this.getAuthenticatedUser(), quiz);
+		model.addAttribute("listOfResults", listOfResults);
+		return "show-quiz-results";
 	}
 
 	private Item findItemInResult(Result result, int itemId) {

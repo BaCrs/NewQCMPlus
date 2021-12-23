@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="main-layout :: main-fragment(~{::title}, ~{::#home-content}, null)">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="main-layout :: main-fragment(~{::title}, null, ~{::#home-content}, null)">
 <head>
 <title>Accueil</title>
 <meta charset="UTF-8">
@@ -12,8 +12,6 @@
 </head>
 <body>
 	<div id="home-content">
-		<h2 th:text=#{app.welcome}></h2>
-		<p>Message de bienvenue ici.</p>
 	</div>
 </body>
 </html>

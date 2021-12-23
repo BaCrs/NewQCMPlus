@@ -1,5 +1,6 @@
 package fr.newqcmplus.entity;
 
+import ch.qos.logback.core.util.TimeUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -8,8 +9,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Entity
 @Table(name= "results")
@@ -44,5 +47,10 @@ public class Result implements Serializable {
     @Column(name = "date_fin")
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date dateFin;
+
+    public String getElapsedTime() {
+        long diffInMillies = dateFin.getTime() - dateDebut.getTime();
+        return TimeUnit.SECONDS.convert(diffInMillies, TimeUnit.MILLISECONDS) + "s";
+    }
 
 }

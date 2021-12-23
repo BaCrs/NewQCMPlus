@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&family=Noto+Sans&display=swap');
+
+* {
+	margin: 0;
+	padding: 0;
+	font-family: "Noto Sans", sans-serif;
+}
+
+body {
+    display: flex;
+	justify-content: center;
+	align-items: center;
+    font-size: 16px;
+    height: 100vh;
+    width: 100%;
+    background-color: #ebeff5;
+}
+
+.login-wrapper {
+    width: 300px;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgb(0 0 0 / 6%);
+    background-color: #ffffff;
+}
+
+.login {
+    width: 100%;
+    display: grid;
+    grid-gap: 15px;
+}
+
+.login__icon {
+    color: #3f66ff;
+    font-size: 1.125rem;
+    font-weight: bold;
+    letter-spacing: -0.025rem;
+    line-height: 1;
+}
+
+.login__title {
+    color: #201568;
+    margin-bottom: 17.5px;
+    font-size: 1.424rem;
+    font-weight: bold;
+    letter-spacing: -0.05rem;
+    line-height: 1;
+}
+
+.login__info, .login__error, .login__label {
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.79rem;
+}
+
+.login__info, .login__error {
+    line-height: 0.25;
+    font-weight: 500;
+}
+
+.login__info {
+    color: #3f51b5;
+}
+
+.login__error {
+    color: #ef4747;
+}
+
+.login__row {
+    display: grid;
+    grid-gap: 8px;
+}
+
+.login__label {
+    color: #201568;
+    font-weight: bold;
+}
+
+.login__input {
+    padding: 0 17.5px;
+    background-color: transparent;
+    color: #625a85;
+    caret-color: #3f66ff;
+}
+
+.login__input, .login__button {
+    border: 1px solid #201568;
+    outline-color: #3f66ff;
+    height: 40px;
+    font-size: 0.79rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.login__button {
+    background-color: #201568;
+    color: #ffffff;
+    height: 45px;
+    font-size: 0.702rem;
+    letter-spacing: 0.075rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}

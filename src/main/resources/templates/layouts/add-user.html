@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="main-layout :: main-fragment(~{::title}, ~{::#new-user-content}, null)">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="main-layout :: main-fragment(~{::title}, null, ~{::#new-user-content}, null)">
 <head>
 <title>Création d'un utilisateur</title>
 <meta charset="UTF-8">
@@ -24,6 +24,7 @@
 			<p>
 				<label>Société : </label><input type="text" th:field="*{company}" required>
 			</p>
+			<div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
 			<p>
 				<label>Identifiant : </label><input type="text" th:field="*{username}" required>
 			</p>

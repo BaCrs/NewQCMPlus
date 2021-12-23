@@ -1,28 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="main-fragment(title, content, js)" 
-xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="main-fragment(title, css, content, js)"
+	  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-	<title th:replace="${title}">New QCM Plus</title>
-	<link rel="stylesheet" type="text/css" th:href="@{/main.css}" href="../../static/main.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title th:replace="${title}"></title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" href="../../static/main.css" />
+	<link rel="icon" type="image/png" th:href="@{/img/icon.png}" href="../../static/img/icon.png">
+	<th:block th:replace="${css} ?: ~{}"></th:block>
 </head>
 <body>
-	<header>
-		<nav>
-			<ul>
-				<li sec:authorize="hasAuthority('ADMIN')"><a href="/user">Utilisateurs</a></li>
-				<li><a href="/quiz">Questionnaires</a></li>
-			</ul>
-		</nav>
-		<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
-		    <input type="submit" value="Logout" />
-		</form>
-	</header>
-	<!-- 
+	<nav id="navbar">
+		<div id="nav__title">
+			<a href="/">
+				<span th:text="#{navbar.title.main}"></span>
+				<span th:text="#{navbar.title.aside}"></span>
+			</a>
+		</div>
+		<ul>
+			<li sec:authorize="hasAuthority('ADMIN')"><a href="/user" th:text="#{navbar.users}"></a></li>
+			<li><a href="/quiz" th:text="#{navbar.quizzes}"></a></li>
+			<li sec:authorize="!isAuthenticated()"><a class="nav__signin" href="/login" th:text="#{navbar.signin}"></a></li>
+			<li sec:authorize="isAuthenticated()">
+				<form th:action="@{/logout}" method="post">
+					<input class="nav__signout" type="submit" th:value="#{navbar.logout}" />
+				</form>
+			</li>
+			<li class="nav__icon"><span onclick="collapseNavbar()">&#9776;</span></li>
+		</ul>
+	</nav>
+
+	<!--
 	<span sec:authentication="name">Username</span>
 	<span sec:authentication="principal.authorities">Roles</span>
 	-->
 	
-	<section th:insert="${content} ?: ~{}"></section>
+	<section th:replace="${content} ?: ~{}"></section>
+	<script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
 	<th:block th:replace="${js} ?: ~{}"></th:block>
 </body>
 </html>

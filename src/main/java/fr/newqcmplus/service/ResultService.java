@@ -3,7 +3,9 @@ package fr.newqcmplus.service;
 import fr.newqcmplus.dao.IQuestionDAO;
 import fr.newqcmplus.dao.IResultDAO;
 import fr.newqcmplus.entity.Question;
+import fr.newqcmplus.entity.Quiz;
 import fr.newqcmplus.entity.Result;
+import fr.newqcmplus.entity.User;
 import fr.newqcmplus.exception.QuestionNotFoundException;
 import fr.newqcmplus.exception.ResultNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +23,19 @@ public class ResultService {
 		return resultDAO.save(result);
 	}
 
-	public Result findQuestionById(Integer id) {
+	public Result findResultById(Integer id) {
 		return resultDAO.findById(id).orElseThrow(() -> new ResultNotFoundException("Result by id " + id + "was not found"));
 	}
 
-	public List<Result> findAllQuestions() {
+	public List<Result> findResultsByUserAndQuiz(User user, Quiz quiz) {
+		return resultDAO.getResultsByUserAndQuiz(user, quiz);
+	}
+
+	public List<Result> findAllResults() {
 		return resultDAO.findAll();
 	}
 
-	public void deleteQuestion(Integer id) {
+	public void deleteResult(Integer id) {
 		resultDAO.deleteById(id);
 	}
 

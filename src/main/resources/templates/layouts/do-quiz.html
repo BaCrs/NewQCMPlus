@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="main-layout :: main-fragment(~{::title}, ~{::#do-quiz-content}, ~{::#do-quiz-js})">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="main-layout :: main-fragment(~{::title}, null, ~{::#do-quiz-content}, ~{::#do-quiz-js})">
 <head>
 <title>Faire le questionnaire</title>
 <!-- 
@@ -24,7 +24,7 @@
 						<li th:each="item, itemStat : *{quiz.questions[__${questionStat.index}__].items}">
 							<input type="hidden" th:field="*{quiz.questions[__${questionStat.index}__].items[__${itemStat.index}__].id}">
 							<p th:text="${item.title}"></p>
-							<input type="checkbox" th:field="*{quiz.questions[__${questionStat.index}__].items[__${itemStat.index}__].response}" />
+							<input type="checkbox" th:field="*{quiz.questions[__${questionStat.index}__].items[__${itemStat.index}__].response}" th:checked="false" />
 						</li>
 					</ul>
 				</li>
