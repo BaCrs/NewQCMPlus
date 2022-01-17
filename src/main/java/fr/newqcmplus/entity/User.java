@@ -60,5 +60,17 @@ public class User implements Serializable{
 
 	@Column(name = "enabled")
 	private boolean enabled;
+
+	public String getFullname() {
+		return firstname + " " + lastname;
+	}
+
+	public String getListOfAuthorities() {
+		String res = "";
+		for (Authority authority : authorities) {
+			res += authority.getName() + ", ";
+		}
+		return res.length() >= 2 ? res.substring(0, res.length() - 2) : res;
+	}
 	
 }

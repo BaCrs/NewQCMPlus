@@ -1,94 +1,204 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&family=Noto+Sans&display=swap');
-
-html, body, ul {
-    margin: 0;
-    padding: 0;
-    font-family: "Noto Sans", sans-serif;
+/*--------------------------------------------------------------
+# General
+--------------------------------------------------------------*/
+:root {
+  scroll-behavior: smooth;
 }
 
-ul {
-    list-style: none;
+body {
+  font-family: "Open Sans", sans-serif;
+  color: #444444;
 }
 
 a {
-    text-decoration: none;
+  color: #4154f1;
+  text-decoration: none;
 }
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 40px 20px 15px;
+a:hover {
+  color: #717ff5;
+  text-decoration: none;
 }
 
-#nav__title a {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    padding: 0 30px;
-    color: #201568;
-    font-size: 1.424rem;
-    font-weight: bold;
-    letter-spacing: -0.05rem;
-    line-height: 1;
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Nunito", sans-serif;
 }
 
-nav ul {
-    display: flex;
-    align-items: center;
-    pa
+/*--------------------------------------------------------------
+# Sections
+--------------------------------------------------------------*/
+section {
+  padding: 150px 0 50px 0;
+  overflow: hidden;
 }
 
-nav li a {
-    padding: 10px 15px;
-    font-size: 0.79rem;
-    line-height: 0.25;
-    font-weight: 500;
-    font-family: "Montserrat", sans-serif;
+/*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+.header {
+  transition: all 0.5s;
+  z-index: 997;
+  padding: 20px 0;
+}
+.header.header-scrolled {
+  background: #fff;
+  padding: 15px 0;
+  box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
+}
+.header .logo {
+  line-height: 0;
+}
+.header .logo img {
+  max-height: 40px;
+  margin-right: 6px;
+}
+.header .logo span {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #012970;
+  font-family: "Nunito", sans-serif;
+  margin-top: 3px;
 }
 
-.nav__signin, .nav__signout {
-    background-color: #201568;
-    color: #ffffff;
-    font-size: 0.75rem;
-    letter-spacing: 0.015rem;
-    border-radius: 8px;
-    margin-left: 15px;
+/*--------------------------------------------------------------
+# Navigation Menu
+--------------------------------------------------------------*/
+/**
+* Desktop Navigation
+*/
+.navbar {
+  padding: 0;
+}
+.navbar ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  list-style: none;
+  align-items: center;
+}
+.navbar li {
+  position: relative;
+}
+.navbar a, .navbar a:focus, .navbar input, .navbar input:focus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0 10px 30px;
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #013289;
+  white-space: nowrap;
+  transition: 0.3s;
+}
+.navbar a i, .navbar a:focus i {
+  font-size: 12px;
+  line-height: 0;
+  margin-left: 5px;
+}
+.navbar a:hover, .navbar .active, .navbar .active:focus, .navbar li:hover > a {
+  color: #4154f1;
+}
+.navbar .signin, .navbar .signin:focus {
+    border: 1px solid #4154f1;
+  background: #4154f1;
+  padding: 8px 20px;
+  margin-left: 30px;
+  border-radius: 4px;
+  color: #fff;
+}
+.navbar .signin:hover, .navbar .signin:focus:hover {
+  color: #fff;
+  background: #5969f3;
 }
 
-.nav__signout {
-    padding: 10px 15px;
-    border: 1px solid #201568;
+/**
+* Mobile Navigation
+*/
+.mobile-nav-toggle {
+  color: #012970;
+  font-size: 28px;
+  cursor: pointer;
+  display: none;
+  line-height: 0;
+  transition: 0.5s;
+}
+.mobile-nav-toggle.bi-x {
+  color: #fff;
 }
 
-.nav__icon {
-    font-weight: 900;
-    font-size: 1.4rem;
+@media (max-width: 991px) {
+  .mobile-nav-toggle {
+    display: block;
+  }
+
+  .navbar ul {
     display: none;
+  }
 }
-
-@media screen and (max-width: 600px) {
-    nav ul li {
-        display: none;
-    }
-
-    nav ul li.nav__icon {
-        display: block;
-    }
-
-    nav.responsive {
-        position: relative;
-    }
-
-    nav.responsive ul li.nav__icon {
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
-
-    nav.responsive ul li {
-        float: none;
-        display: block;
-        text-align: left;
-    }
+.navbar-mobile {
+  position: fixed;
+  overflow: hidden;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(1, 22, 61, 0.9);
+  transition: 0.3s;
+}
+.navbar-mobile .mobile-nav-toggle {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+.navbar-mobile ul {
+  display: block;
+  position: absolute;
+  top: 55px;
+  right: 15px;
+  bottom: 15px;
+  left: 15px;
+  padding: 10px 0;
+  border-radius: 10px;
+  background-color: #fff;
+  overflow-y: auto;
+  transition: 0.3s;
+}
+.navbar-mobile a, .navbar-mobile a:focus {
+  padding: 10px 20px;
+  font-size: 15px;
+  color: #012970;
+}
+.navbar-mobile a:hover, .navbar-mobile .active, .navbar-mobile li:hover > a {
+  color: #4154f1;
+}
+.navbar-mobile .signin, .navbar-mobile .signin:focus {
+  margin: 15px;
+}
+.navbar-mobile .dropdown ul {
+  position: static;
+  display: none;
+  margin: 10px 20px;
+  padding: 10px 0;
+  z-index: 99;
+  opacity: 1;
+  visibility: visible;
+  background: #fff;
+  box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
+}
+.navbar-mobile .dropdown ul li {
+  min-width: 200px;
+}
+.navbar-mobile .dropdown ul a {
+  padding: 10px 20px;
+}
+.navbar-mobile .dropdown ul a i {
+  font-size: 12px;
+}
+.navbar-mobile .dropdown ul a:hover, .navbar-mobile .dropdown ul .active:hover, .navbar-mobile .dropdown ul li:hover > a {
+  color: #4154f1;
+}
+.navbar-mobile .dropdown > .dropdown-active {
+  display: block;
 }

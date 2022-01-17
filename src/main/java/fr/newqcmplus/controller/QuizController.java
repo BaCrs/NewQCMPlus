@@ -79,7 +79,7 @@ public class QuizController {
 	@PostMapping("/do")
 	public String saveQuizAnswers(@RequestParam int quizId, @ModelAttribute Result result) {
 		// TODO : indiquer dans la base si le stagiaire n'a pas du tout répondu à la question.
-		result.setUser(this.getAuthenticatedUser());
+		result.setUser(LoginController.getAuthenticatedUser());
 		result.setDateFin(new Date());
 		Quiz originalQuiz = quizService.findQuizById(quizId);
 		List<Answer> answers = new ArrayList<>();
@@ -101,7 +101,7 @@ public class QuizController {
 	@GetMapping("results")
 	public String showQuizResults(@RequestParam int quizId, Model model) {
 		Quiz quiz = quizService.findQuizById(quizId);
-		List<Result> listOfResults = resultService.findResultsByUserAndQuiz(this.getAuthenticatedUser(), quiz);
+		List<Result> listOfResults = resultService.findResultsByUserAndQuiz(LoginController.getAuthenticatedUser(), quiz);
 		model.addAttribute("listOfResults", listOfResults);
 		return "show-quiz-results";
 	}
@@ -115,10 +115,6 @@ public class QuizController {
 		return null;
 	}
 
-	private User getAuthenticatedUser() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-		return customUserDetails.getUser();
-	}
+
 	
 }

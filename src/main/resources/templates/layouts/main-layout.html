@@ -1,41 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="main-fragment(title, css, content, js)"
-	  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      th:fragment="main-fragment(title, css, content, js)">
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title th:replace="${title}"></title>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" href="../../static/main.css" />
-	<link rel="icon" type="image/png" th:href="@{/img/icon.png}" href="../../static/img/icon.png">
-	<th:block th:replace="${css} ?: ~{}"></th:block>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:replace="${title}"></title>
+    <link rel="icon" type="image/png" th:href="@{/img/icon.png}" href="../../static/img/icon.png">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" href="../../static/main.css"/>
+    <th:block th:replace="${css} ?: ~{}"></th:block>
 </head>
 <body>
-	<nav id="navbar">
-		<div id="nav__title">
-			<a href="/">
-				<span th:text="#{navbar.title.main}"></span>
-				<span th:text="#{navbar.title.aside}"></span>
-			</a>
-		</div>
-		<ul>
-			<li sec:authorize="hasAuthority('ADMIN')"><a href="/user" th:text="#{navbar.users}"></a></li>
-			<li><a href="/quiz" th:text="#{navbar.quizzes}"></a></li>
-			<li sec:authorize="!isAuthenticated()"><a class="nav__signin" href="/login" th:text="#{navbar.signin}"></a></li>
-			<li sec:authorize="isAuthenticated()">
-				<form th:action="@{/logout}" method="post">
-					<input class="nav__signout" type="submit" th:value="#{navbar.logout}" />
-				</form>
-			</li>
-			<li class="nav__icon"><span onclick="collapseNavbar()">&#9776;</span></li>
-		</ul>
-	</nav>
-
-	<!--
-	<span sec:authentication="name">Username</span>
-	<span sec:authentication="principal.authorities">Roles</span>
-	-->
-	
-	<section th:replace="${content} ?: ~{}"></section>
-	<script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
-	<th:block th:replace="${js} ?: ~{}"></th:block>
+    <header id="header" class="header fixed-top">
+        <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+            <a th:href="@{/}" href="/" class="logo d-flex align-items-center">
+                <img th:src="@{/img/logo.png}" src="../../static/img/logo.png" alt="">
+                <span th:text="#{header.logo}"></span>
+            </a>
+            <nav id="navbar" class="navbar">
+                <ul>
+                    <li sec:authorize="hasAuthority('ADMIN')"><a class="nav-link" th:href="@{/user}" href="/user" th:text="#{header.navbar.users}"></a></li>
+                    <li><a class="nav-link" th:href="@{/quiz}" href="/quiz" th:text="#{header.navbar.quizzes}"></a></li>
+                    <li sec:authorize="!isAuthenticated()"><a class="signin" th:href="@{/login}" href="/login" th:text="#{header.navbar.login}"></a></li>
+                    <li sec:authorize="isAuthenticated()">
+                        <form th:action="@{/logout}" method="post">
+                            <input class="signin" type="submit" th:value="#{header.navbar.logout}" />
+                        </form>
+                    </li>
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav>
+        </div>
+    </header>
+    <th:block th:replace="${content} ?: ~{}"></th:block>
+    <th:block th:replace="${js} ?: ~{}"></th:block>
 </body>
 </html>

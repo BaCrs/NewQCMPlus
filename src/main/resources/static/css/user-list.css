@@ -1,0 +1,39 @@
+.user-list-btn {
+display: inline-block;
+float: right;
+    border: 1px solid #4154f1;
+      background: #4154f1;
+      padding: 8px 20px;
+      border-radius: 4px;
+      color: #fff;
+}
+
+.user-list-btn i {
+    font-weight: 700;
+}
+
+.user-table {
+    padding-top: 30px;
+}
+.user-table td {
+    vertical-align: middle;
+}
+.user-subhead{
+    font-style: italic;
+    font-size: 0.75rem;
+    color: #939393;
+}
+.user-icons a {
+    color: #fff;
+    margin-right: 5px;
+}
+.user-icons i {
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+.user-icons .bi-pencil-square {
+    background-color: #46a9ef;
+}
+.user-icons .bi-trash {
+    background-color: #ef4646;
+}

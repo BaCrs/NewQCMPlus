@@ -1,5 +1,7 @@
 package fr.newqcmplus.controller;
 
+import fr.newqcmplus.entity.Password;
+import fr.newqcmplus.validator.PasswordValidator;
 import fr.newqcmplus.validator.QuestionValidator;
 import fr.newqcmplus.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +23,14 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@InitBinder()
-	protected void initBinder(WebDataBinder binder) {
+	@InitBinder("user")
+	protected void initUserBinder(WebDataBinder binder) {
 		binder.setValidator(new UserValidator(userService));
+	}
+
+	@InitBinder("password")
+	protected void initPasswordBinder(WebDataBinder binder) {
+		binder.setValidator(new PasswordValidator());
 	}
 
 	@GetMapping("")
@@ -54,6 +61,23 @@ public class UserController {
 	public String showUserUpdateForm(@RequestParam int id, Model model) {
 		model.addAttribute("user", userService.findUserById(id));
 		return "add-user";
+	}
+
+	@GetMapping("/password/update")
+	public String showUserPasswordUpdateForm(@ModelAttribute Password password) {
+		return "update-password";
+	}
+
+	@PostMapping("/password/save")
+	public String savePassword(@Validated @ModelAttribute Password password, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "update-password";
+		} else {
+			User user = LoginController.getAuthenticatedUser();
+			user.setPassword(BCrypt.hashpw(password.getNewPassword(), BCrypt.gensalt()));
+			userService.saveUser(user);
+			return "redirect:/user";
+		}
 	}
 	
 	@PostMapping("/delete")
