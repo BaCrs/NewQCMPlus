@@ -24,6 +24,9 @@
 								</a>
 							</div>
 						</div>
+						<div th:if="${message != null}">
+							<span th:text="${message}"></span>
+						</div>
 						<table class="table table-striped user-table">
 							<thead>
 								<tr>
@@ -36,7 +39,7 @@
 							<tbody>
 								<tr th:each="user : ${listOfUsers}">
 									<td class="user-table-user">
-										<div class="user-head" th:text="${user.lastname}"></div>
+										<div class="user-head" th:text="${user.lastname + ' ' + user.firstname}"></div>
 										<div class="user-subhead" th:text="${user.listOfAuthorities}"></div>
 									</td>
 									<td th:text="${user.company}"></td>

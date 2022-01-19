@@ -14,6 +14,13 @@ import org.springframework.validation.Validator;
 @Component
 public class PasswordValidator implements Validator {
 
+	@Autowired
+	private UserService userService;
+
+	public PasswordValidator(UserService userService) {
+		this.userService = userService;
+	}
+
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return Password.class.equals(clazz);
@@ -31,9 +38,8 @@ public class PasswordValidator implements Validator {
 			errors.rejectValue("newPassword", "invalid.password.new");
 		}
 		// 3. Check if the old password is correct.
-		User user = LoginController.getAuthenticatedUser();
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		if (!passwordEncoder.matches(password.getOldPassword(), user.getPassword())) {
+		User user = userService.findUserById(password.getId());
+		if (!BCrypt.checkpw(password.getOldPassword(), user.getPassword())) {
 			errors.rejectValue("oldPassword", "invalid.password.old");
 		}
 	}

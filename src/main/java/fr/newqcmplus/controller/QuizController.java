@@ -1,6 +1,8 @@
 package fr.newqcmplus.controller;
 
 import fr.newqcmplus.entity.*;
+import fr.newqcmplus.exception.QuizNotFoundException;
+import fr.newqcmplus.exception.UserNotFoundException;
 import fr.newqcmplus.security.CustomUserDetails;
 import fr.newqcmplus.service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import fr.newqcmplus.service.QuizService;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
 @RequestMapping("/quiz")
@@ -36,29 +42,42 @@ public class QuizController {
 	@GetMapping("")
 	public String showAllQuizzes(Model model) {
 		model.addAttribute("listOfQuizzes", quizService.findAllQuizs());
-		return "quiz";
+		return "quizList";
 	}
 	
 	@GetMapping("/create")
 	public String showQuizCreateForm(@ModelAttribute Quiz quiz) {
-		return "add-quiz";
+		return "newQuizForm";
 	}
 	
-	@PostMapping("/save")
-	public String saveQuiz(@ModelAttribute Quiz quiz) {
+	@PostMapping("/create")
+	public String saveNewQuiz(@ModelAttribute Quiz quiz, RedirectAttributes redirectAttributes) {
 		quizService.saveQuiz(quiz);
+		redirectAttributes.addFlashAttribute("message", "Le questionnaire a bien été créé.");
 		return "redirect:/quiz";
 	}
 	
 	@GetMapping("/update")
 	public String showQuizUpdateForm(@RequestParam int id, Model model) {
-		model.addAttribute("quiz", quizService.findQuizById(id));
-		return "add-quiz";
+		try {
+			model.addAttribute("quiz", quizService.findQuizById(id));
+			return "updateQuizForm";
+		} catch (QuizNotFoundException e) {
+			throw new ResponseStatusException(NOT_FOUND);
+		}
+	}
+
+	@PostMapping("/update")
+	public String saveUpdatedQuiz(@ModelAttribute Quiz quiz, RedirectAttributes redirectAttributes) {
+		quizService.saveQuiz(quiz);
+		redirectAttributes.addFlashAttribute("message", "Le questionnaire a bien été modifié.");
+		return "redirect:/quiz";
 	}
 	
 	@PostMapping("/delete")
-	public String deleteQuiz(@RequestParam int id) {
+	public String deleteQuiz(@RequestParam int id, RedirectAttributes redirectAttributes) {
 		quizService.deleteQuiz(id);
+		redirectAttributes.addFlashAttribute("message", "Le questionnaire a bien été supprimé.");
 		return "redirect:/quiz";
 	}
 
@@ -114,7 +133,5 @@ public class QuizController {
 		}
 		return null;
 	}
-
-
 	
 }

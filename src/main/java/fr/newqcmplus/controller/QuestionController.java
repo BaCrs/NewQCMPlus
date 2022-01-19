@@ -34,6 +34,19 @@ public class QuestionController {
 		binder.setValidator(new QuestionValidator());
 	}
 
+	@GetMapping("")
+	public String showAllQuestions(@RequestParam int quizId, Model model) {
+		model.addAttribute("quizId", quizId);
+		model.addAttribute("listOfQuestions", quizService.findQuizById(quizId).getQuestions());
+		// TODO : sort the list of questions by id
+		/*
+		Collections.sort(dl, (d1, d2) -> {
+			return d2.getId() - d1.getId();
+		});
+		 */
+		return "questionList";
+	}
+
 	@GetMapping("/create")
 	public String showQuestionCreateForm(@RequestParam int quizId, Model model, @ModelAttribute Question question) {
 		model.addAttribute("quizId", quizId);
@@ -44,7 +57,7 @@ public class QuestionController {
 			items.add(item);
 		}
 		question.setItems(items);
-		return "add-question";	
+		return "newQuestionForm";
 	}
 	
 	@PostMapping("/save")

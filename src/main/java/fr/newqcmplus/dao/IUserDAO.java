@@ -9,6 +9,6 @@ import fr.newqcmplus.entity.User;
 public interface IUserDAO extends JpaRepository<User, Integer> {
 
 	@Query("SELECT u FROM User u WHERE u.username = :username")
-    public User getUserByUsername(@Param("username") String username);
+    User getUserByUsername(@Param("username") String username);
 	
 }

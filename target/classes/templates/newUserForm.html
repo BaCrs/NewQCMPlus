@@ -9,13 +9,13 @@
 </head>
 <body>
 	<div id="user-form-content">
-		<section id="user-list" class="user-list">
+		<section id="user-form" class="form">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12">
-						<h3>Création d'un utilisateur</h3>
-						<form method="post" th:action="@{/user/save}" th:object="${user}">
-							<input type="hidden" th:field="*{id}">
+						<a th:href="@{/user}" th:text="#{common.back}"></a>
+						<h3 th:text="#{user.form.create.caption}"></h3>
+						<form method="post" th:action="@{/user/create}" th:object="${user}">
 							<div class="row">
 								<div class="form-group col-md-6">
 									<label for="user-firstname" th:text="#{user.form.firstname.label}"></label>
@@ -30,14 +30,16 @@
 								<label for="user-company" th:text="#{user.form.company.label}"></label>
 								<input id="user-company" class="form-control" type="text" th:field="*{company}" required>
 							</div>
+							<small id="usernameHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
 							<div class="form-group">
 								<label for="user-username" th:text="#{user.form.username.label}"></label>
 								<input id="user-username" class="form-control" type="text" th:field="*{username}" required>
 							</div>
-							<small id="usernameHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
 							<div class="form-group">
+								<label for="user-password" th:text="#{user.form.password.label}"></label>
+								<input id="user-password" class="form-control" type="password" th:field="*{password}" required>
+							</div>
 							<button type="submit" th:text="#{common.create}"></button>
-							<a th:href="@{/user/password/update}">Modifier le mot de passe</a>
 						</form>
 					</div>
 				</div>
