@@ -64,6 +64,9 @@ public class User implements Serializable{
 	public String getFullname() {
 		return firstname + " " + lastname;
 	}
+	public String getInitial() {
+		return firstname.substring(0, 1).toUpperCase() + lastname.substring(0, 1).toUpperCase();
+	}
 
 	public String getListOfAuthorities() {
 		String res = "";
