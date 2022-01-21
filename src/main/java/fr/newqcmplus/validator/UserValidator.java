@@ -30,6 +30,9 @@ public class UserValidator implements Validator {
 		if (userService.findUserByUsername(user.getUsername()) != null) {
 			errors.rejectValue("username", "invalid.user.username");
 		}
+		if (!user.getPassword().equals(user.getPasswordConfirmation())) {
+			errors.rejectValue("passwordConfirmation", "invalid.password.confirmation");
+		}
 	}
 
 }
