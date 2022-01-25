@@ -1,0 +1,15 @@
+.slide {
+font-family: Inter
+    padding: 20px;
+}
+
+.question-title {
+    padding-bottom: 5px;
+}
+
+.answer {
+}
+
+.answer input[type='checkbox'] {
+    padding-right: 5px;
+}

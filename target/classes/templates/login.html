@@ -15,7 +15,7 @@
                 <span class="login__info" th:if="${param.logout}" th:text="#{login.logout}"></span>
                 <div class="login__row">
                     <label class="login__label" for="login-username" th:text="#{login.form.username}"></label>
-                    <input id="login-username" class="login__input" type="text" name="username" th:placeholder="#{login.form.username}"/>
+                    <input id="login-username" class="login__input" type="text" name="username" th:placeholder="#{login.form.username}" autofocus/>
                 </div>
                 <div class="login__row">
                     <label class="login__label" for="login-password" th:text="#{login.form.password}"></label>

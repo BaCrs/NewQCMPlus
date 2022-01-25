@@ -30,7 +30,6 @@
 							<div onclick="addItem()">Ajouter une réponse</div>
 							<button type="submit">Envoyer</button>
 						</form>
-		
 		<form method="post" th:action="@{/question/delete(id=${question.id}, quizId=${quizId})}" th:object="${question}">
 			<button type="submit" onClick="return confirm('Etes-vous sûr de vouloir supprimer cette question ?')">Supprimer</button>
 		</form>

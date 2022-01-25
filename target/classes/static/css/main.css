@@ -64,6 +64,9 @@ body {
     align-items: center;
 }
 
+.hidden {
+    display: none;
+}
 /* COMMON */
 .btn-primary {
     padding: 10px 15px;

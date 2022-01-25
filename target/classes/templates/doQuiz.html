@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="main-layout :: main-fragment(~{::title}, ~{::#do-quiz-css}, ~{::#do-quiz-content}, ~{::#do-quiz-js})">
+<head>
+	<title th:text="#{quiz.do.pageLabel}"></title>
+	<th:block id="do-quiz-css">
+		<link rel="stylesheet" type="text/css" href="../../static/css/do-quiz.css" th:href="@{/css/do-quiz.css}"/>
+	</th:block>
+</head>
+<body>
+	<div id="do-quiz-content">
+		<div class="card card-small">
+			<div class="row align-center card-header">
+				<h3 th:text="${result.quiz.title}"></h3>
+			</div>
+			<form method="post" th:action="@{/quiz/do(quizId=${result.quiz.id})}" th:object="${result}">
+				<input type="hidden" th:field="*{id}">
+				<input type="hidden" th:field="*{dateDebut}">
+				<div class="form-row">
+					<ul>
+						<li th:each="question, questionStat : *{quiz.questions}" th:id="${'slide-' + questionStat.index}" th:class="slide" th:classAppend="${questionStat.index > 0} ? hidden : ''">
+							<h4 class="question-title" th:text="${question.title}"></h4>
+							<ul>
+								<li th:each="item, itemStat : *{quiz.questions[__${questionStat.index}__].items}" class="answer align-center">
+									<input type="hidden" th:field="*{quiz.questions[__${questionStat.index}__].items[__${itemStat.index}__].id}">
+									<input type="checkbox" th:field="*{quiz.questions[__${questionStat.index}__].items[__${itemStat.index}__].response}">
+									<p class="item-title" th:text="${item.title}"></p>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<div class="form-row row">
+					<div id="previous-button" class="btn-primary hidden" onclick="previous()" th:text="#{common.previous}"></div>
+					<div id="next-button" class="btn-primary" th:classappend="${result.quiz.questions.size() <= 1} ? 'btn-disabled' : ''" onclick="next()" th:text="#{common.next}"></div>
+					<button id="submit-button" class="btn-primary" th:classappend="${result.quiz.questions.size() <= 1} ? '' : 'hidden'" type="submit" th:text="#{common.validate}"></button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<th:block id="do-quiz-js">
+		<script type="text/javascript" src="../../static/do-quiz.js" th:src="@{/do-quiz.js}"></script>
+	</th:block>
+</body>
+</html>

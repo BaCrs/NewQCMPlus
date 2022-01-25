@@ -84,15 +84,16 @@ public class QuizController {
 	@GetMapping("/do")
 	public String doQuiz(@RequestParam int quizId, @ModelAttribute Result result) {
 		Quiz quiz = quizService.findQuizById(quizId);
-		// On cache les bonnes réponses du questionnaire.
+		// 1. On cache les bonnes réponses du questionnaire.
 		for (Question question : quiz.getQuestions()) {
 			for (Item item : question.getItems()) {
 				item.setResponse(false);
 			}
 		}
 		result.setQuiz(quiz);
+		// 2. On fixe la date et l'heure de début.
 		result.setDateDebut(new Date());
-		return "do-quiz";
+		return "doQuiz";
 	}
 
 	@PostMapping("/do")
