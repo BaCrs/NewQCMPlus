@@ -24,7 +24,7 @@
                     <li sec:authorize="!isAuthenticated()"><a class="btn-primary" th:href="@{/login}" href="/login" th:text="#{header.navbar.login}"></a></li>
                     <li sec:authorize="isAuthenticated()">
                         <form th:action="@{/logout}" method="post" class="btn-primary">
-                        	<input type="submit" th:value="#{header.navbar.logout}">
+                        	<input type="submit" id="btn-logout" th:value="#{header.navbar.logout}">
                         </form>
                     </li>
                 </ul>
