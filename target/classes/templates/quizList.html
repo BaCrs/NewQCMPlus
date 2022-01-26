@@ -33,8 +33,7 @@
 						<th scope="col" th:text="#{quiz.list.title}"></th>
 						<th scope="col" th:text="#{quiz.list.description}"></th>
 						<th scope="col" th:text="#{quiz.list.numberOfQuestions}"></th>
-						<th scope="col" th:text="#{quiz.list.actions}"></th>
-						<th></th>
+						<th sec:authorize="hasAuthority('ADMIN')" scope="col" th:text="#{quiz.list.actions}"></th>
 						<th sec:authorize="hasAuthority('STAGIAIRE')"></th>
 					</tr>
 				</thead>
@@ -43,7 +42,7 @@
 						<td th:text="${quiz.title}"></td>
 						<td th:text="${quiz.description}"></td>
 						<td th:text="${quiz.questions.size()}"></td>
-						<td>
+						<td  sec:authorize="hasAuthority('ADMIN')">
 							<button class="icon-bg icon-action dropdown" th:attr="onclick=|dropdown(${index.index})|" >
                                <svg class="small-icon dropdown" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                                    <path
