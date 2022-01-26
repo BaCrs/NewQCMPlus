@@ -27,8 +27,8 @@ public class ResultService {
 		return resultDAO.findById(id).orElseThrow(() -> new ResultNotFoundException("Result by id " + id + "was not found"));
 	}
 
-	public List<Result> findResultsByUserAndQuiz(User user, Quiz quiz) {
-		return resultDAO.getResultsByUserAndQuiz(user, quiz);
+	public List<Result> findResultsByUser(User user) {
+		return resultDAO.getResultsByUser(user);
 	}
 
 	public List<Result> findAllResults() {

@@ -42,15 +42,19 @@ public class Result implements Serializable {
 
     @Column(name = "date_debut")
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private Date dateDebut;
+    private Date start;
 
     @Column(name = "date_fin")
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private Date dateFin;
+    private Date end;
 
-    public String getElapsedTime() {
-        long diffInMillies = dateFin.getTime() - dateDebut.getTime();
-        return TimeUnit.SECONDS.convert(diffInMillies, TimeUnit.MILLISECONDS) + "s";
+    public String getTimeSpent() {
+        long diff = end.getTime() - start.getTime();
+        return TimeUnit.SECONDS.convert(diff, TimeUnit.MILLISECONDS) + "s";
+    }
+
+    public String getScore() {
+        return "2/10";
     }
 
 }

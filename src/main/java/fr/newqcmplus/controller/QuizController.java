@@ -92,7 +92,7 @@ public class QuizController {
 		}
 		result.setQuiz(quiz);
 		// 2. On fixe la date et l'heure de début.
-		result.setDateDebut(new Date());
+		result.setStart(new Date());
 		return "doQuiz";
 	}
 
@@ -100,7 +100,7 @@ public class QuizController {
 	public String saveQuizAnswers(@RequestParam int quizId, @ModelAttribute Result result) {
 		// TODO : indiquer dans la base si le stagiaire n'a pas du tout répondu à la question.
 		result.setUser(LoginController.getAuthenticatedUser());
-		result.setDateFin(new Date());
+		result.setEnd(new Date());
 		Quiz originalQuiz = quizService.findQuizById(quizId);
 		List<Answer> answers = new ArrayList<>();
 		for (Question question : originalQuiz.getQuestions()) {
@@ -118,12 +118,11 @@ public class QuizController {
 		return "close-quiz";
 	}
 
-	@GetMapping("results")
-	public String showQuizResults(@RequestParam int quizId, Model model) {
-		Quiz quiz = quizService.findQuizById(quizId);
-		List<Result> listOfResults = resultService.findResultsByUserAndQuiz(LoginController.getAuthenticatedUser(), quiz);
+	@GetMapping("result")
+	public String showQuizResults(Model model) {
+		List<Result> listOfResults = resultService.findResultsByUser(LoginController.getAuthenticatedUser());
 		model.addAttribute("listOfResults", listOfResults);
-		return "show-quiz-results";
+		return "resultList";
 	}
 
 	private Item findItemInResult(Result result, int itemId) {

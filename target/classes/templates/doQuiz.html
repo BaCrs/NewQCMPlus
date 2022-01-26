@@ -14,22 +14,22 @@
 			</div>
 			<form method="post" th:action="@{/quiz/do(quizId=${result.quiz.id})}" th:object="${result}">
 				<input type="hidden" th:field="*{id}">
-				<input type="hidden" th:field="*{dateDebut}">
+				<input type="hidden" th:field="*{start}">
 				<div class="form-row">
 					<ul>
 						<li th:each="question, questionStat : *{quiz.questions}" th:id="${'slide-' + questionStat.index}" th:class="slide" th:classAppend="${questionStat.index > 0} ? hidden : ''">
 							<h4 class="question-title" th:text="${question.title}"></h4>
 							<ul>
 								<li th:each="item, itemStat : *{quiz.questions[__${questionStat.index}__].items}" class="answer align-center">
-									<input type="hidden" th:field="*{quiz.questions[__${questionStat.index}__].items[__${itemStat.index}__].id}">
+									<!-- <input type="hidden" th:field="*{quiz.questions[__${questionStat.index}__].items[__${itemStat.index}__].id}"> -->
 									<input type="checkbox" th:field="*{quiz.questions[__${questionStat.index}__].items[__${itemStat.index}__].response}">
-									<p class="item-title" th:text="${item.title}"></p>
+									<label class="item-title" th:text="${item.title}"></label>
 								</li>
 							</ul>
 						</li>
 					</ul>
 				</div>
-				<div class="form-row row">
+				<div class="buttonset row">
 					<div id="previous-button" class="btn-primary hidden" onclick="previous()" th:text="#{common.previous}"></div>
 					<div id="next-button" class="btn-primary" th:classappend="${result.quiz.questions.size() <= 1} ? 'btn-disabled' : ''" onclick="next()" th:text="#{common.next}"></div>
 					<button id="submit-button" class="btn-primary" th:classappend="${result.quiz.questions.size() <= 1} ? '' : 'hidden'" type="submit" th:text="#{common.validate}"></button>

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface IResultDAO extends JpaRepository<Result, Integer> {
 
-    @Query("SELECT r FROM Result r WHERE r.quiz = :quiz AND r.user = :user")
-    public List<Result> getResultsByUserAndQuiz(@Param("user") User user, @Param("quiz") Quiz quiz);
+    @Query("SELECT r FROM Result r WHERE r.user = :user")
+    public List<Result> getResultsByUser(@Param("user") User user);
 	
 }

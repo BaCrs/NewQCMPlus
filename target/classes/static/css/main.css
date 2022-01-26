@@ -417,3 +417,10 @@ form {
 #login-right form {
     width: 100%;
 }
+
+.table-empty {
+    padding: 50px;
+    font: 'Inter', sans-serif;
+    color: var(--grey-main);
+    font-size: 0.95rem;
+}
