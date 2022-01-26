@@ -9,43 +9,44 @@
 </head>
 <body>
 	<div id="user-form-content">
-		<section id="user-list" class="user-list">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-12">
-						<a th:href="@{/user}" th:text="#{common.back}"></a>
-						<div th:if="${message != null}">
-							<span th:text="${message}"></span>
-						</div>
-						<h3 th:text="#{user.form.update.caption}"></h3>
-						<form method="post" th:action="@{/user/update}" th:object="${user}">
-							<input type="hidden" th:field="*{id}">
-							<div class="row">
-								<div class="form-group col-md-6">
-									<label for="user-firstname" th:text="#{user.form.firstname.label}"></label>
-									<input id="user-firstname" class="form-control" type="text" th:field="*{firstname}" required>
-								</div>
-								<div class="form-group col-md-6">
-									<label for="user-lastname" th:text="#{user.form.lastname.label}"></label>
-									<input id="user-lastname" class="form-control" type="text" th:field="*{lastname}" required>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="user-company" th:text="#{user.form.company.label}"></label>
-								<input id="user-company" class="form-control" type="text" th:field="*{company}" required>
-							</div>
-							<small id="usernameHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
-							<div class="form-group">
-								<label for="user-username" th:text="#{user.form.username.label}"></label>
-								<input id="user-username" class="form-control" type="text" th:field="*{username}" required>
-							</div>
-							<button type="submit" th:text="#{common.modify}"></button>
-							<a th:href="@{/user/password/update(id=${user.id})}" th:text="#{user.form.password.modify}"></a>
-						</form>
-					</div>
+		<div class="card card-small">
+			<div class="row align-center card-header">
+				<!-- 
+				<div th:if="${message != null}">
+					<span th:text="${message}"></span>
+					<a th:href="@{/user}" th:text="#{common.back}"></a>
 				</div>
+				 -->
+				<h3 th:text="#{user.form.update.caption}"></h3>
+				<a th:href="@{/user}" class="btn-primary" th:text="#{common.back}"></a>
 			</div>
-		</section>
+			<form method="post" th:action="@{/user/update}" th:object="${user}">
+				<input type="hidden" th:field="*{id}">
+				<div class="form-row">
+					<label for="user-firstname" class="form-label" th:text="#{user.form.firstname.label} + ' :' "></label>
+					<input id="user-firstname" class="form-input" type="text" th:field="*{firstname}" th:placeholder="#{user.form.firstname.label}" required>
+				</div>
+				<div class="form-row">
+					<label for="user-lastname" class="form-label" th:text="#{user.form.lastname.label} + ' :' "></label>
+					<input id="user-lastname" class="form-input" type="text" th:field="*{lastname}" th:placeholder="#{user.form.lastname.label}" required>
+				</div>
+				<div class="form-row">
+					<label for="user-company" class="form-label" th:text="#{user.form.company.label} + ' :' "></label>
+					<input id="user-company" class="form-input" type="text" th:field="*{company}" th:placeholder="#{user.form.company.label}" required>
+				</div>
+				<div class="form-row">
+					<label for="user-username" class="form-label" th:text="#{user.form.username.label} + ' :' "></label>
+					<input id="user-username" class="form-input" type="text" th:field="*{username}" name="identifiant" th:placeholder="#{user.form.username.label}" required>
+				</div>
+				<small id="usernameHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
+				<div class="form-row align-center">
+					<a class="" th:href="@{/user/password/update(id=${user.id})}" th:text="#{user.form.password.modify}"></a>
+				</div>
+				<div class="form-row">
+					<button type="submit" class="btn-primary" th:text="#{common.save}"></button>
+				</div>
+			</form>
+		</div>
 	</div>
 </body>
 </html>
