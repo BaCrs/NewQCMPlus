@@ -1,12 +1,13 @@
 package fr.newqcmplus.controller;
 
 import fr.newqcmplus.dao.IAuthorityDAO;
-import fr.newqcmplus.dao.IUserDAO;
 import fr.newqcmplus.entity.Authority;
 import fr.newqcmplus.entity.Password;
+import fr.newqcmplus.entity.User;
 import fr.newqcmplus.exception.UserNotFoundException;
+import fr.newqcmplus.service.AuthorityService;
+import fr.newqcmplus.service.UserService;
 import fr.newqcmplus.validator.PasswordValidator;
-import fr.newqcmplus.validator.QuestionValidator;
 import fr.newqcmplus.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -17,9 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import fr.newqcmplus.entity.User;
-import fr.newqcmplus.service.UserService;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -42,7 +40,7 @@ public class UserController {
 	private UserService userService;
 
 	@Autowired
-	private IAuthorityDAO authorityDAO;
+	private AuthorityService authorityService;
 
 	@InitBinder("user")
 	protected void initUserBinder(WebDataBinder binder) {
@@ -51,7 +49,7 @@ public class UserController {
 
 	@InitBinder("password")
 	protected void initPasswordBinder(WebDataBinder binder) {
-		binder.setValidator(new PasswordValidator(userService));
+		binder.addValidators(new PasswordValidator(userService));
 	}
 
 	@GetMapping("")
@@ -85,9 +83,9 @@ public class UserController {
 			user.setEnabled(true);
 			// 3. A new user has by default the STAGIAIRE authority.
 			Set<Authority> authorities = new HashSet<>();
-			authorities.add(authorityDAO.getAuthorityByName("STAGIAIRE"));
+			authorities.add(authorityService.findAuthorityByName("STAGIAIRE"));
 			user.setAuthorities(authorities);
-			// 4. Save the new user in the database and return back to the list of users.
+			// 4. Save the new user in the database and redirect to the list of users.
 			userService.saveUser(user);
 			redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.user.new", null, Locale.FRENCH));
 			return "redirect:/user";
@@ -105,7 +103,7 @@ public class UserController {
 	}
 
 	@PostMapping("/update")
-	public String saveUpdatedUser(@Validated @ModelAttribute User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+	public String saveUpdatedUser(@Valid @ModelAttribute User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			return "updateUserForm";
 		} else {
@@ -117,7 +115,7 @@ public class UserController {
 				updatedUser.setLastname(user.getLastname());
 				updatedUser.setCompany(user.getCompany());
 				updatedUser.setUsername(user.getUsername());
-				// 3. Save the user in the database and return back to the list of users.
+				// 3. Save the user in the database and redirect to the list of users.
 				userService.saveUser(updatedUser);
 				redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.user.update", null, Locale.FRENCH));
 				return "redirect:/user";
@@ -143,12 +141,16 @@ public class UserController {
 			model.addAttribute("id", id);
 			return "updatePasswordForm";
 		} else {
-			User user = userService.findUserById(id);
-			user.setPassword(BCrypt.hashpw(password.getNewPassword(), BCrypt.gensalt()));
-			userService.saveUser(user);
-			redirectAttributes.addAttribute("id", id);
-			redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.password.update", null, Locale.FRENCH));
-			return "redirect:/user/update";
+			try {
+				User user = userService.findUserById(id);
+				user.setPassword(BCrypt.hashpw(password.getNewPassword(), BCrypt.gensalt()));
+				userService.saveUser(user);
+				redirectAttributes.addAttribute("id", id);
+				redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.password.update", null, Locale.FRENCH));
+				return "redirect:/user/update";
+			} catch (UserNotFoundException e) {
+				throw new ResponseStatusException(NOT_FOUND);
+			}
 		}
 	}
 	

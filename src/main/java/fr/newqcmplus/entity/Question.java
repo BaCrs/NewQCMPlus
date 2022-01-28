@@ -27,7 +27,7 @@ public class Question {
     private String title;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "question_id")
+    @JoinColumn(name = "question_id", nullable = false)
     private List<Item> items;
 
 }

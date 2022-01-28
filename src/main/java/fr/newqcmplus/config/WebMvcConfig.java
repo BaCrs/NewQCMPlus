@@ -14,15 +14,6 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-	/*
-	@Bean(name = "messageSource")
-    public ResourceBundleMessageSource getMessageSource() throws Exception {
-        ResourceBundleMessageSource rbms = new ResourceBundleMessageSource();
-        rbms.setDefaultEncoding("UTF-8");
-        rbms.setBasenames("/i18n/");
-        return rbms;
-    }
-	*/
 	@Bean
 	public LocaleResolver localeResolver() {
 	    SessionLocaleResolver slr = new SessionLocaleResolver();

@@ -479,10 +479,29 @@ form {
     fill: #26ab0c;
 }
 
-.btn-quiz {
+.buttonset{
+    padding: 10px 0;
+}
+.buttonset .btn-primary, .buttonset .btn-secondary {
+    width: 100%;
+    margin-right: 10px;
+}
+.buttonset .btn-primary:last-child, .buttonset .btn-secondary:last-child {
+    margin-right: 0;
+}
+
+.btn-secondary {
     border: thin solid var(--primary-main);
     background-color: var(--txt-light);
     color: var(--primary-main);
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-quiz {
     padding: 7px 10px;
 }
 
@@ -493,3 +512,21 @@ form {
 html, body {
     height: 100%;
 }
+
+.hidden {
+    display: none;
+}
+
+.item:not() {
+    padding
+}
+
+.item input[type='text'] {
+    margin-left: 10px;
+    flex-grow: 1;
+}
+
+.item:not(first-child) {
+    margin-top: 10px
+}
+

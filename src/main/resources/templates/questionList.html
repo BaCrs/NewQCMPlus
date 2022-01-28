@@ -1,88 +1,79 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  th:replace="main-layout :: main-fragment(~{::title}, ~{::#question-list-css}, ~{::#question-content}, null)">
+	  th:replace="main-layout :: main-fragment(~{::title}, null, ~{::#question-content}, ~{::#question-list-js})">
 <head>
 	<title th:text="#{question.list.pageLabel}"></title>
-	<th:block id="question-list-css">
-		<link rel="stylesheet" type="text/css" href="../../static/css/user-list.css" th:href="@{/css/user-list.css}"/>
-	</th:block>
 </head>
 <body>
 	<div id="question-content">
-		<div>
-			<div>
-				<div class="message success row" th:if="${message != null}">
-					<span th:text="${message}"></span>
-				</div>
-				<div class="card">
-					<div class="row align-center card-header">
-						<h3 th:text="#{question.list.caption}"></h3>
-						<a th:href="@{/question/create(quizId=${quizId})}" class="btn-primary align-center">
-							<svg class="small-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
-								<path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"></path>
-							</svg>
-							<span th:text="#{common.create}"></span>
-						</a>
-					</div>
-					<table>
-						<thead>
-							<tr>
-								<th scope="col" th:text="#{question.list.title}"></th>
-								<th scope="col" th:text="#{user.list.actions}"></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="question, index : ${listOfQuestions}">
-								<td>
-									<div class="row align-center">
-										<a class="form-label" th:href="@{/question/update(id=${question.id}, quizId=${quizId})}" th:text="${question.title}"></a>
-									</div>
-								</td>
-								<td>
-									<button class="icon-bg icon-action dropdown" th:attr="onclick=|dropdown(${index.index})|" >
-										<svg class="small-icon dropdown" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
-											<path
-												d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z">
-											</path>
-										</svg>
-									</button>
-									<div th:id="${'dropdown-' + index.index}" class="dropdown-content">
-										<a th:href="@{/question/update(id=${question.id}, quizId=${quizId})}" class="align-center">
-											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="small-icon">
-												<path
-													d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z">
-												</path>
-											</svg>
-											<span class="icon-text" th:text="#{common.modify}"></span>
-										</a>
-										<form method="post" th:action="@{/question/delete(id=${question.id}, quizId=${quizId})}" class="align-center">
-											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="small-icon">
-												<path 
-													d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z">
-												</path>
-											</svg>
-											<button type="submit" onClick="return confirm('Etes-vous s�r de vouloir supprimer cet utilisateur ?')" th:text="#{common.delete}" class="icon-text">	
-											</button>
-										</form>
-									</div>
-								</td>
-							</tr>
-						</tbody>
-							<!-- <div class="form-row">
-								<a class="form-label" th:href="@{/question/update(id=${question.id}, quizId=${quizId})}" th:text="${question.title}"></a>
-							</div>
-							<!-- 
-							<ul>
-								<li th:each="item : ${question.items}">
-									<p th:text="${item.title}"><input type="checkbox" checked="${item.response}" disabled>
-								</li> 
-							</ul>
-							-->
-						</table>
-					</div>
+		<div  id="success-message" class="message success row" th:if="${message != null}">
+			<span th:text="${message}"></span>
+			<svg id="close-button" class="small-icon icon-close" viewBox="0 0 20 20">
+				<path d="M15.898,4.045c-0.271-0.272-0.713-0.272-0.986,0l-4.71,4.711L5.493,4.045c-0.272-0.272-0.714-0.272-0.986,0s-0.272,0.714,0,0.986l4.709,4.711l-4.71,4.711c-0.272,0.271-0.272,0.713,0,0.986c0.136,0.136,0.314,0.203,0.492,0.203c0.179,0,0.357-0.067,0.493-0.203l4.711-4.711l4.71,4.711c0.137,0.136,0.314,0.203,0.494,0.203c0.178,0,0.355-0.067,0.492-0.203c0.273-0.273,0.273-0.715,0-0.986l-4.711-4.711l4.711-4.711C16.172,4.759,16.172,4.317,15.898,4.045z"></path>
+			</svg>
+		</div>
+		<div class="card">
+			<div class="row align-center card-header">
+				<h3 th:text="#{question.list.caption}"></h3>
+				<div class="row buttonset">
+					<a class="btn-secondary" th:href="@{/quiz}" th:text="#{common.back}"></a>
+					<a th:href="@{/question/create(quizId=${quizId})}" class="btn-primary align-center">
+						<svg class="small-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+							<path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"></path>
+						</svg>
+						<span th:text="#{common.create}"></span>
+					</a>
 				</div>
 			</div>
-			<script th:src="@{/js/dropdown.js}"></script>
+			<table>
+				<thead>
+					<tr>
+						<th th:text="#{question.list.title}"></th>
+						<th th:text="#{question.list.numberOfAnswers}"></th>
+						<th th:text="#{common.actions}"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="question, index : ${listOfQuestions}">
+						<td th:text="${question.title}"></td>
+						<td th:text="${question.items.size()}"></td>
+						<td>
+							<button class="icon-bg icon-action dropdown" th:attr="onclick=|dropdown(${index.index})|" >
+								<svg class="small-icon dropdown" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+									<path
+										d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z">
+									</path>
+								</svg>
+							</button>
+							<div th:id="${'dropdown-' + index.index}" class="dropdown-content">
+								<a th:href="@{/question/update(id=${question.id}, quizId=${quizId})}" class="align-center">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="small-icon">
+										<path
+											d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z">
+										</path>
+									</svg>
+									<span class="icon-text" th:text="#{common.modify}"></span>
+								</a>
+								<form method="post" th:action="@{/question/delete(id=${question.id}, quizId=${quizId})}" class="align-center">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="small-icon">
+										<path
+											d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z">
+										</path>
+									</svg>
+									<button type="submit" onClick="return confirm('Etes-vous sûr de vouloir supprimer cette question ?')" th:text="#{common.delete}" class="icon-text">
+									</button>
+								</form>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div th:if="${listOfQuestions.isEmpty()}" class="table-empty centered" th:text="#{question.list.empty}"></div>
 		</div>
+	</div>
+	<th:block id="question-list-js">
+		<script th:src="@{/js/dropdown.js}"></script>
+		<script th:src="@{/js/message.js}"></script>
+	</th:block>
 </body>
 </html>

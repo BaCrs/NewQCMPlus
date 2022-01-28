@@ -6,6 +6,7 @@ import fr.newqcmplus.exception.UserNotFoundException;
 import fr.newqcmplus.security.CustomUserDetails;
 import fr.newqcmplus.service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +29,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -35,6 +37,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Controller
 @RequestMapping("/quiz")
 public class QuizController {
+
+	@Autowired
+	private MessageSource messageSource;
 
 	@Autowired
 	private QuizService quizService;
@@ -63,7 +68,7 @@ public class QuizController {
 			return "newQuizForm";
 		} else {
 			quizService.saveQuiz(quiz);
-			redirectAttributes.addFlashAttribute("message", "Le questionnaire a bien été créé.");
+			redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.quiz.new", null, Locale.FRENCH));
 			return "redirect:/quiz";
 		}
 	}
@@ -79,16 +84,20 @@ public class QuizController {
 	}
 
 	@PostMapping("/update")
-	public String saveUpdatedQuiz(@ModelAttribute Quiz quiz, RedirectAttributes redirectAttributes) {
-		quizService.saveQuiz(quiz);
-		redirectAttributes.addFlashAttribute("message", "Le questionnaire a bien été modifié.");
-		return "redirect:/quiz";
+	public String saveUpdatedQuiz(@Valid @ModelAttribute Quiz quiz, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+		if (bindingResult.hasErrors()) {
+			return "updateQuizForm";
+		} else {
+			quizService.saveQuiz(quiz);
+			redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.quiz.update", null, Locale.FRENCH));
+			return "redirect:/quiz";
+		}
 	}
 	
 	@PostMapping("/delete")
 	public String deleteQuiz(@RequestParam int id, RedirectAttributes redirectAttributes) {
 		quizService.deleteQuiz(id);
-		redirectAttributes.addFlashAttribute("message", "Le questionnaire a bien été supprimé.");
+		redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.quiz.delete", null, Locale.FRENCH));
 		return "redirect:/quiz";
 	}
 
@@ -100,14 +109,14 @@ public class QuizController {
 			if (!resultService.findResultsByUserAndQuiz(LoginController.getAuthenticatedUser(), quiz).isEmpty() || quiz.getQuestions() == null || quiz.getQuestions().isEmpty()) {
 				throw new ResponseStatusException(FORBIDDEN);
 			}
-			// 2. On cache les bonnes réponses du questionnaire.
+			// 2. Hide good answers.
 			for (Question question : quiz.getQuestions()) {
 				for (Item item : question.getItems()) {
 					item.setResponse(false);
 				}
 			}
 			result.setQuiz(quiz);
-			// 3. On fixe la date et l'heure de début.
+			// 3. Set start date
 			result.setStart(new Date());
 			return "doQuiz";
 		} catch (QuizNotFoundException e) {

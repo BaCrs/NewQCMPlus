@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  th:replace="main-layout :: main-fragment(~{::title}, ~{::#user-form-css}, ~{::#user-form-content}, ~{::#user-form-js})">
+	  th:replace="main-layout :: main-fragment(~{::title}, null, ~{::#user-form-content}, ~{::#user-form-js})">
 <head>
 	<title th:text="#{user.form.pageLabel}"></title>
-	<th:block id="user-form-css">
-		<link rel="stylesheet" type="text/css" href="../../static/css/user-form.css" th:href="@{/css/user-form.css}"/>
-	</th:block>
 </head>
 <body>
 	<div id="user-form-content">
@@ -42,7 +39,8 @@
 					<input id="user-username" class="form-input" type="text" th:field="*{username}" th:placeholder="#{user.form.username.label}">
 					<small id="usernameHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
 				</div>
-				<div class="form-row">
+				<div class="row buttonset">
+					<a th:href="@{/user/password/update(id=${user.id})}" class="centered btn-secondary" th:text="#{user.form.password.modify}"></a>
 					<button type="submit" class="btn-primary" th:text="#{common.save}"></button>
 				</div>
 			</form>

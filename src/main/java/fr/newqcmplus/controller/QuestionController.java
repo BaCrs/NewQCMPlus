@@ -1,22 +1,29 @@
 package fr.newqcmplus.controller;
 
+import fr.newqcmplus.entity.Item;
+import fr.newqcmplus.entity.Question;
 import fr.newqcmplus.entity.Quiz;
+import fr.newqcmplus.exception.QuestionNotFoundException;
+import fr.newqcmplus.exception.QuizNotFoundException;
+import fr.newqcmplus.service.QuestionService;
 import fr.newqcmplus.service.QuizService;
 import fr.newqcmplus.validator.QuestionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import fr.newqcmplus.entity.Item;
-import fr.newqcmplus.entity.Question;
-import fr.newqcmplus.service.QuestionService;
-
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
 @RequestMapping("/question")
@@ -25,25 +32,27 @@ public class QuestionController {
 	private static final int MAX_QUESTION_ITEMS = 5;
 
 	@Autowired
+	private MessageSource messageSource;
+
+	@Autowired
 	private  QuestionService questionService;
+
 	@Autowired
 	private QuizService quizService;
 
 	@InitBinder()
 	protected void initBinder(WebDataBinder binder) {
-		binder.setValidator(new QuestionValidator());
+		binder.addValidators(new QuestionValidator());
 	}
 
 	@GetMapping("")
 	public String showAllQuestions(@RequestParam int quizId, Model model) {
-		model.addAttribute("quizId", quizId);
-		model.addAttribute("listOfQuestions", quizService.findQuizById(quizId).getQuestions());
-		// TODO : sort the list of questions by id
-		/*
-		Collections.sort(dl, (d1, d2) -> {
-			return d2.getId() - d1.getId();
+		List<Question> listOfQuestions = quizService.findQuizById(quizId).getQuestions();
+		listOfQuestions.sort((q1, q2) -> {
+			return q1.getId() - q2.getId();
 		});
-		 */
+		model.addAttribute("quizId", quizId);
+		model.addAttribute("listOfQuestions", listOfQuestions);
 		return "questionList";
 	}
 
@@ -61,46 +70,64 @@ public class QuestionController {
 	}
 	
 	@PostMapping("/create")
-	public String saveNewQuestion(@RequestParam int quizId, @Validated @ModelAttribute Question question, BindingResult bindingResult, Model model) {
+	public String saveNewQuestion(@RequestParam int quizId, @Valid @ModelAttribute Question question, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("quizId", quizId);
 	      	return "newQuestionForm";
-	    }
-		Quiz quiz = quizService.findQuizById(quizId);
-		// On supprime les réponses vides.
-		question.getItems().removeIf(item -> item.getTitle() == null || item.getTitle().isBlank());
-		// On ajoute la question au quiz ou on la met à jour si elle existe déjà.
-		quiz.getQuestions().removeIf(q -> q.getId() == question.getId());
-		quiz.getQuestions().add(question);
-		// On sauvegarde le quiz pour enregistrer en cascade.
-		System.out.println(quiz);
-		quizService.saveQuiz(quiz);
-		return "redirect:/question?quizId=" + quizId;
+	    } else {
+			try {
+				Quiz quiz = quizService.findQuizById(quizId);
+				// Delete null or blank answers.
+				question.getItems().removeIf(item -> item.getTitle() == null || item.getTitle().isBlank());
+				// Add question to quiz or update it if it already exists.
+				quiz.getQuestions().removeIf(q -> q.getId() == question.getId()); // Delete & add instead of update
+				quiz.getQuestions().add(question);
+				// Save the quiz to save the questions and redirect back to the list of questions.
+				quizService.saveQuiz(quiz);
+				redirectAttributes.addAttribute("quizId", quizId);
+				redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.question.new", null, Locale.FRENCH));
+				return "redirect:/question";
+			} catch (QuizNotFoundException e) {
+				throw new ResponseStatusException(NOT_FOUND);
+			}
+		}
 	}
 	
 	@GetMapping("/update")
 	public String showQuestionUpdateForm(@RequestParam int id, @RequestParam int quizId, Model model) {
-		model.addAttribute("quizId", quizId);
-		model.addAttribute("question", questionService.findQuestionById(id));
-		return "updateQuestionForm";
+		try {
+			Question question = questionService.findQuestionById(id);
+			for (int i = question.getItems().size(); i < MAX_QUESTION_ITEMS; i++) question.getItems().add(new Item());
+			model.addAttribute("quizId", quizId);
+			model.addAttribute("question", question);
+			return "updateQuestionForm";
+		} catch (QuestionNotFoundException e) {
+			throw new ResponseStatusException(NOT_FOUND);
+		}
 	}
 	
 	@PostMapping("/update")
-	public String saveUpdateQuestion(@RequestParam int quizId, @Validated @ModelAttribute Question question, BindingResult bindingResult, Model model) {
+	public String saveUpdatedQuestion(@RequestParam int quizId, @Valid @ModelAttribute Question question, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("quizId", quizId);
 	      	return "updateQuestionForm";
-	    }
-		Quiz quiz = quizService.findQuizById(quizId);
-		// On supprime les réponses vides.
-		question.getItems().removeIf(item -> item.getTitle() == null || item.getTitle().isBlank());
-		// On ajoute la question au quiz ou on la met à jour si elle existe déjà.
-		quiz.getQuestions().removeIf(q -> q.getId() == question.getId());
-		quiz.getQuestions().add(question);
-		// On sauvegarde le quiz pour enregistrer en cascade.
-		System.out.println(quiz);
-		quizService.saveQuiz(quiz);
-		return "redirect:/question?quizId=" + quizId;
+	    } else {
+			try {
+				Quiz quiz = quizService.findQuizById(quizId);
+				// Delete null or blank answers.
+				question.getItems().removeIf(item -> item.getTitle() == null || item.getTitle().isBlank());
+				// Add question to quiz or update it if it already exists.
+				quiz.getQuestions().removeIf(q -> q.getId() == question.getId()); // Delete & add instead of update
+				quiz.getQuestions().add(question);
+				// Save the quiz to save the questions and redirect back to the list of questions.
+				quizService.saveQuiz(quiz);
+				redirectAttributes.addAttribute("quizId", quizId);
+				redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.question.new", null, Locale.FRENCH));
+				return "redirect:/question";
+			} catch (QuizNotFoundException e) {
+				throw new ResponseStatusException(NOT_FOUND);
+			}
+		}
 	}
 	
 	@PostMapping("/delete")

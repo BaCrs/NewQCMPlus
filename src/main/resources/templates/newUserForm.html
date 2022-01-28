@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  th:replace="main-layout :: main-fragment(~{::title}, ~{::#user-form-css}, ~{::#user-form-content}, null)">
+	  th:replace="main-layout :: main-fragment(~{::title}, null, ~{::#user-form-content}, null)">
 <head>
 	<title th:text="#{user.form.pageLabel}"></title>
-	<th:block id="user-form-css">
-		<link rel="stylesheet" type="text/css" href="../../static/css/user-form.css" th:href="@{/css/user-form.css}"/>
-	</th:block>
 </head>
 <body>
 	<div id="user-form-content">

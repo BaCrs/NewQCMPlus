@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import fr.newqcmplus.dao.IAuthorityDAO;
 import fr.newqcmplus.entity.Authority;
-import fr.newqcmplus.exception.AuthorityNotFoundException;
 
 @Service
 public class AuthorityService {
@@ -19,8 +18,8 @@ public class AuthorityService {
 		return authorityDAO.save(authority);
 	}
 
-	public Authority findAuthorityById(int id) {
-		return authorityDAO.findById(id).orElseThrow(() -> new AuthorityNotFoundException("Authority by id " + id + "was not found"));
+	public Authority findAuthorityByName(String name) {
+		return authorityDAO.getAuthorityByName(name);
 	}
 
 	public List<Authority> findAllAuthorities() {

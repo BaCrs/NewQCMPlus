@@ -10,17 +10,10 @@
 <body>
 	<section id="home-content" class="hero align-center">
 		<div class="row">
-			<div class="col">
+			<div class="hero-txt col">
 				<h1 th:text="#{home.hero.title}"></h1>
 				<h2 th:text="#{home.hero.subtitle}"></h2>
-				<div>
-					<div class="">
-						<a th:href="@{/quiz}" class="btn-get-started align-center">
-							<span th:text="#{home.hero.button.quizzes}"></span>
-							<i class="bi bi-arrow-right"></i>
-						</a>
-					</div>
-				</div>
+				<a th:href="@{/quiz}" class="btn-get-started align-center" th:text="#{home.hero.button.quizzes}"></a>
 			</div>
 			<div class="hero-img">
 				<img th:src="@{/img/hero-img.png}" src="../../static/img/hero-img.png" class="img-fluid" alt="">

@@ -1,4 +1,4 @@
-const MAX_SLIDE = document.querySelectorAll('.slide').length;;
+const MAX_SLIDE = document.querySelectorAll('.slide').length;
 const MIN_SLIDE = 0;
 let slideCount = MIN_SLIDE;
 

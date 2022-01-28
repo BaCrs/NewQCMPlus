@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class LoginController {
 
-	@GetMapping("/login")
-	public String login() {
-		return "login";
-	}
-
 	public static User getAuthenticatedUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 		return customUserDetails.getUser();
 	}
-	
+
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
+
 }

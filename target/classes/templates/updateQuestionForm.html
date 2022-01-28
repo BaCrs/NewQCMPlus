@@ -1,56 +1,46 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	th:replace="main-layout :: main-fragment(~{::title}, ~{::#question-form-css}, ~{::#question-form-content}, ~{::#new-question-js})">
+	  th:replace="main-layout :: main-fragment(~{::title}, null, ~{::#question-form-content}, ~{::#new-question-js})">
 <head>
-<title th:text="#{question.form.pageLabel}"></title>
-<th:block id="question-form-css">
-	<link rel="stylesheet" type="text/css"
-		href="../../static/css/user-form.css" th:href="@{/css/user-form.css}" />
-</th:block>
+	<title th:text="#{question.form.pageLabel}"></title>
 </head>
 <body>
-	<div id="question-form-content">
-		<div class="card card-small">
-			<div class="row align-center card-header">
-				<h3 th:text="#{question.form.update.caption}"></h3>
-				<a th:href="@{/question(quizId=${quizId})}" class="btn-primary"
-					th:text="#{common.back}"></a>
-			</div>
-			<form method="post"
-				th:action="@{/question/update(quizId=${quizId})}"
-				th:object="${question}">
-				<input type="hidden" th:field="*{id}">
-				<div class="form-row">
-					<label for="question-title"
-						th:text="#{question.form.title} + ' :' " class="form-label"></label>
-					<input id="question-title" class="form-input" type="text"
-						th:field="*{title}"
-						th:placeholder="#{question.form.title.placeholder}" required>
-				</div>
-				<div class="form-row">
-					<label class="form-label" th:text="#{quiz.list.items} + ' :' "></label>
-					<span th:if="${#fields.hasErrors('items')}" th:errors="*{items}"></span>
-					<ul>
-						<li th:each="item, itemStat : *{items}" class="item"
-							th:classappend="${itemStat.index<6} ? item-visible : item-hidden">
-							<input type="hidden" th:field="*{items[__${itemStat.index}__].id}"> 
-							<input type="checkbox"
-								th:field="*{items[__${itemStat.index}__].response}" /> <input
-								type="text" th:field="*{items[__${itemStat.index}__].title}"
-								class="form-input" />
-						</li>
-					</ul>
-				</div>
-				<div class="form-row">
-					<!-- <div onclick="addItem()">Ajouter une réponse</div>  -->
-					<button type="submit" class="btn-primary" th:text="#{common.save}"></button>
-				</div>
-			</form>
+<div id="question-form-content">
+	<div class="card card-small">
+		<div class="row align-center card-header">
+			<h3 th:text="#{question.form.update.caption}"></h3>
+			<a th:href="@{/question(quizId=${quizId})}" class="btn-primary" th:text="#{common.back}"></a>
 		</div>
-		<th:block id="new-question-js">
-			<script type="text/javascript" src="../../static/add-question.js"
-				th:src="@{/add-question.js}"></script>
-		</th:block>
+		<form method="post" th:action="@{/question/update(quizId=${quizId})}" th:object="${question}">
+			<input type="hidden" th:field="*{id}">
+			<div class="form-row">
+				<label for="question-title" th:text="#{question.form.title} + ' :' " class="form-label"></label>
+				<input id="question-title" class="form-input" type="text" th:field="*{title}" th:placeholder="#{question.form.title}">
+				<small id="titleHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></small>
+			</div>
+			<div class="form-row">
+				<label class="form-label" th:text="#{question.form.items} + ' :' "></label>
+				<ul>
+					<li th:each="item, itemStat : *{items}" class="align-center item" th:classappend="${item.title == null || item.title.isBlank()} ? hidden : ''" th:id="${'item-' + itemStat.index}">
+						<input type="hidden" th:field="*{items[__${itemStat.index}__].id}">
+						<input type="checkbox" th:field="*{items[__${itemStat.index}__].response}" />
+						<input type="text" th:field="*{items[__${itemStat.index}__].title}" class="form-input" />
+					</li>
+				</ul>
+				<small id="itemsHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('items')}" th:errors="*{items}"></small>
+			</div>
+			<div class="row buttonset">
+				<div class="btn-secondary centered" onclick="removeItem()" th:text="#{question.form.items.remove}"></div>
+				<div class="btn-secondary centered" onclick="addItem()" th:text="#{question.form.items.add}"></div>
+			</div>
+			<div class="form-row">
+				<button type="submit" class="btn-primary" th:text="#{common.save}"></button>
+			</div>
+		</form>
 	</div>
+	<th:block id="new-question-js">
+		<script th:src="@{/js/question.js}"></script>
+	</th:block>
+</div>
 </body>
 </html>
