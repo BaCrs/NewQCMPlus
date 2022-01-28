@@ -1,16 +1,12 @@
 package fr.newqcmplus.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "items")
@@ -23,8 +19,9 @@ public class Item {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
-	@NonNull
+
+	@NotBlank(message = "{input.not.blank}")
+	@Size(max = 255, message = "{input.max.255}")
 	@Column(name = "title")
 	private String title;
 

@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +22,14 @@ import fr.newqcmplus.service.QuizService;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
@@ -41,7 +44,11 @@ public class QuizController {
 	
 	@GetMapping("")
 	public String showAllQuizzes(Model model) {
-		model.addAttribute("listOfQuizzes", quizService.findAllQuizs());
+		List<Quiz> listOfQuizzes = quizService.findAllQuizs();
+		for (Quiz quiz : listOfQuizzes) {
+			quiz.setAvailable(resultService.findResultsByUserAndQuiz(LoginController.getAuthenticatedUser(), quiz).isEmpty());
+		}
+		model.addAttribute("listOfQuizzes", listOfQuizzes);
 		return "quizList";
 	}
 	
@@ -51,10 +58,14 @@ public class QuizController {
 	}
 	
 	@PostMapping("/create")
-	public String saveNewQuiz(@ModelAttribute Quiz quiz, RedirectAttributes redirectAttributes) {
-		quizService.saveQuiz(quiz);
-		redirectAttributes.addFlashAttribute("message", "Le questionnaire a bien été créé.");
-		return "redirect:/quiz";
+	public String saveNewQuiz(@Valid @ModelAttribute Quiz quiz, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+		if (bindingResult.hasErrors()) {
+			return "newQuizForm";
+		} else {
+			quizService.saveQuiz(quiz);
+			redirectAttributes.addFlashAttribute("message", "Le questionnaire a bien été créé.");
+			return "redirect:/quiz";
+		}
 	}
 	
 	@GetMapping("/update")
@@ -83,22 +94,29 @@ public class QuizController {
 
 	@GetMapping("/do")
 	public String doQuiz(@RequestParam int quizId, @ModelAttribute Result result) {
-		Quiz quiz = quizService.findQuizById(quizId);
-		// 1. On cache les bonnes réponses du questionnaire.
-		for (Question question : quiz.getQuestions()) {
-			for (Item item : question.getItems()) {
-				item.setResponse(false);
+		try {
+			// 1. Check if user has already answered the quiz once and if the quiz contains questions.
+			Quiz quiz = quizService.findQuizById(quizId);
+			if (!resultService.findResultsByUserAndQuiz(LoginController.getAuthenticatedUser(), quiz).isEmpty() || quiz.getQuestions() == null || quiz.getQuestions().isEmpty()) {
+				throw new ResponseStatusException(FORBIDDEN);
 			}
+			// 2. On cache les bonnes réponses du questionnaire.
+			for (Question question : quiz.getQuestions()) {
+				for (Item item : question.getItems()) {
+					item.setResponse(false);
+				}
+			}
+			result.setQuiz(quiz);
+			// 3. On fixe la date et l'heure de début.
+			result.setStart(new Date());
+			return "doQuiz";
+		} catch (QuizNotFoundException e) {
+			throw new ResponseStatusException(NOT_FOUND);
 		}
-		result.setQuiz(quiz);
-		// 2. On fixe la date et l'heure de début.
-		result.setStart(new Date());
-		return "doQuiz";
 	}
 
 	@PostMapping("/do")
-	public String saveQuizAnswers(@RequestParam int quizId, @ModelAttribute Result result) {
-		// TODO : indiquer dans la base si le stagiaire n'a pas du tout répondu à la question.
+	public String saveQuizAnswers(@RequestParam int quizId, @ModelAttribute Result result, RedirectAttributes redirectAttributes) {
 		result.setUser(LoginController.getAuthenticatedUser());
 		result.setEnd(new Date());
 		Quiz originalQuiz = quizService.findQuizById(quizId);
@@ -115,7 +133,8 @@ public class QuizController {
 		result.setAnswers(answers);
 		result.setQuiz(originalQuiz);
 		resultService.save(result);
-		return "close-quiz";
+		redirectAttributes.addFlashAttribute("message", "Les réponses au questionnaire ont bien été enregistrées.");
+		return "redirect:/quiz";
 	}
 
 	@GetMapping("result")

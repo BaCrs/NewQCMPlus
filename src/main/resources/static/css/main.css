@@ -32,6 +32,7 @@ ul {
 }
 
 button {
+    background-color: transparent;
     border: none;
     cursor: pointer;
 }
@@ -99,7 +100,7 @@ body {
     border-radius: 5px;
 }
 
-.card-small {
+.card-small, .message-small {
     max-width: 800px;
     margin: auto;
 }
@@ -218,6 +219,7 @@ nav li:last-child {
 /* CONTENT */
 #content {
     width: 100%;
+    height: 100%;
     max-width: 1440px;
     margin: auto;
     padding: 25px;
@@ -304,45 +306,84 @@ nav li:last-child {
     z-index: 1;
 }
 
-.dropdown-content a {
+.dropdown-content a, .dropdown-content form {
     fill: var(--grey-dark);
     color: var(--grey-dark);
     padding: 12px 17px;
     text-align: left;
     transition-duration: 0.1s;
+    cursor: pointer;
+}
+
+.dropdown-content button {
+    font-family: 'Inter';
+    color: inherit;
+    font-size:inherit;
 }
 
 .dropdown-content a:not(:last-child) {
     border-bottom: thin solid var(--grey-extralight);
 }
 
-.dropdown-content a:hover {
+.dropdown-content a:hover, .dropdown-content form:hover {
     background-color: var(--grey-extralight)
 }
 
 .show {display:block;}
 
 /* STAT CARD */
-.stat-panel {
+.stat-panel .card {
+    padding: 20px;
+    margin: 40px 20px;
+    flex-grow: 1;
     justify-content: space-between;
 }
 
-.stat-panel .card {
-    padding: 20px;
-    margin: 40px 20px 40px 0;
+.stat-panel .card:first-child {
+    margin-left: 0;
+}
+
+.stat-panel .card:last-child {
+    margin-right: 0;
+}
+
+.stat-panel-bg {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
+
+.txt-stat-panel {
+    font-family: 'Inter', sans-serif;
+    color: var(--grey-main);
+    text-transform: capitalize;
+    font-size: 0.95rem;
+    margin-top: 5px;;
+}
+
+.icon-user {
+    fill:#924ee0;
+    background-color: #efebff;
 }
 
 .message {
     padding: 10px 15px;
-    margin: 10px 0;
+    margin: 10px auto;
     border-radius: 5px;
     justify-content: space-between;
 }
 
 .success {
-    background-color: #d1fdcd;
-    color: #3fbe26;
-    border: thin solid #3fbe26;
+    background-color: #eeffec;
+    color: #44c966;
+    fill: #44c966;
+    border: thin solid #44c966;
+}
+
+.icon-close {
+    margin-top: 2px;
+    fill: inherit;
+    cursor: pointer;
 }
 
 /*********/
@@ -379,6 +420,12 @@ form {
 
 .form-row input[type='submit'] {
     margin-top: 10px;
+}
+
+.form-text {
+    font-family: 'Inter', sans-serif;
+    color: var(--grey-main);
+    font-size: 0.75rem;
 }
 
 /*******/
@@ -423,4 +470,26 @@ form {
     font: 'Inter', sans-serif;
     color: var(--grey-main);
     font-size: 0.95rem;
+}
+
+.icon-done {
+    margin-top: 7px;
+    width: 25px;
+    height: 25px;
+    fill: #26ab0c;
+}
+
+.btn-quiz {
+    border: thin solid var(--primary-main);
+    background-color: var(--txt-light);
+    color: var(--primary-main);
+    padding: 7px 10px;
+}
+
+.txt-role {
+    text-transform: capitalize;
+}
+
+html, body {
+    height: 100%;
 }

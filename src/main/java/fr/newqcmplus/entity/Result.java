@@ -1,15 +1,14 @@
 package fr.newqcmplus.entity;
 
-import ch.qos.logback.core.util.TimeUtil;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.Duration;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,12 +25,10 @@ public class Result implements Serializable {
     @Column(name = "id")
     private int id;
 
-    @NonNull
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NonNull
     @ManyToOne
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
@@ -48,13 +45,37 @@ public class Result implements Serializable {
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date end;
 
+    public String getCompletionDate() {
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        return formatter.format(start);
+    }
+
     public String getTimeSpent() {
         long diff = end.getTime() - start.getTime();
         return TimeUnit.SECONDS.convert(diff, TimeUnit.MILLISECONDS) + "s";
     }
 
     public String getScore() {
-        return "2/10";
+        int score = 0;
+        for (Question question : quiz.getQuestions()) {
+            boolean isCorrect = true;
+            for (Item item : question.getItems()) {
+                Answer answer = this.findAnswerByItem(item);
+                if (answer.isResponse() != item.isResponse()) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+            if (isCorrect) score++;
+        }
+        return score + "/" + quiz.getQuestions().size();
+    }
+
+    private Answer findAnswerByItem(Item item) {
+        for (Answer answer : answers) {
+            if (answer.getItem() == item) return answer;
+        }
+        return null;
     }
 
 }

@@ -31,6 +31,10 @@ public class ResultService {
 		return resultDAO.getResultsByUser(user);
 	}
 
+	public List<Result> findResultsByUserAndQuiz(User user, Quiz quiz) {
+		return resultDAO.getResultsByUserAndQuiz(user, quiz);
+	}
+
 	public List<Result> findAllResults() {
 		return resultDAO.findAll();
 	}

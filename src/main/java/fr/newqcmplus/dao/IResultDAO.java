@@ -13,5 +13,8 @@ public interface IResultDAO extends JpaRepository<Result, Integer> {
 
     @Query("SELECT r FROM Result r WHERE r.user = :user")
     public List<Result> getResultsByUser(@Param("user") User user);
+
+    @Query("SELECT r FROM Result r WHERE r.user = :user AND r.quiz = :quiz")
+    public List<Result> getResultsByUserAndQuiz(@Param("user") User user, @Param("quiz") Quiz quiz);
 	
 }

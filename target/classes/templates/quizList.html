@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
-	  th:replace="main-layout :: main-fragment(~{::title}, ~{::#quiz-list-css}, ~{::#quiz-content}, null)">
+	  th:replace="main-layout :: main-fragment(~{::title}, ~{::#quiz-list-css}, ~{::#quiz-content}, ~{::#quiz-list-js})">
 <head>
 	<title th:text="#{quiz.list.pageLabel}"></title>
 	<th:block id="quiz-list-css">
@@ -11,19 +11,23 @@
 <body>
 	<div id="quiz-content">
 		<div>
-			<div>
-				<div class="message success row" th:if="${message != null}">
-					<span th:text="${message}"></span>
-				</div>
+			<div  id="success-message" class="message success row" th:if="${message != null}">
+				<span th:text="${message}"></span>
+				<svg id="close-button" class="small-icon icon-close" viewBox="0 0 20 20">
+					<path d="M15.898,4.045c-0.271-0.272-0.713-0.272-0.986,0l-4.71,4.711L5.493,4.045c-0.272-0.272-0.714-0.272-0.986,0s-0.272,0.714,0,0.986l4.709,4.711l-4.71,4.711c-0.272,0.271-0.272,0.713,0,0.986c0.136,0.136,0.314,0.203,0.492,0.203c0.179,0,0.357-0.067,0.493-0.203l4.711-4.711l4.71,4.711c0.137,0.136,0.314,0.203,0.494,0.203c0.178,0,0.355-0.067,0.492-0.203c0.273-0.273,0.273-0.715,0-0.986l-4.711-4.711l4.711-4.711C16.172,4.759,16.172,4.317,15.898,4.045z"></path>
+				</svg>
 			</div>
 			<div class="card">
 				<div class="row align-center card-header">
 					<h3 th:text="#{quiz.list.caption}"></h3>
-					<a href="/quiz/create" class="btn-primary align-center">
+					<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/quiz/create}" class="btn-primary align-center">
 						<svg class="small-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                             <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"></path>
                         </svg>
 						<span th:text="#{common.create}"></span>
+					</a>
+					<a sec:authorize="hasAuthority('STAGIAIRE')" th:href="@{/quiz/result}" class="btn-primary align-center">
+						<span th:text="#{quiz.list.show.results}"></span>
 					</a>
 				</div>
 			</div>
@@ -38,11 +42,11 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="quiz, index : ${listOfQuizzes}">
+					<tr th:each="quiz, index : ${listOfQuizzes}" th:unless="${#authorization.expression('hasAuthority(''STAGIAIRE'')') && quiz.questions.isEmpty()}">
 						<td th:text="${quiz.title}"></td>
 						<td th:text="${quiz.description}"></td>
 						<td th:text="${quiz.questions.size()}"></td>
-						<td  sec:authorize="hasAuthority('ADMIN')">
+						<td sec:authorize="hasAuthority('ADMIN')">
 							<button class="icon-bg icon-action dropdown" th:attr="onclick=|dropdown(${index.index})|" >
                                <svg class="small-icon dropdown" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                                    <path
@@ -80,11 +84,24 @@
 							</form>
 						</td>
 						-->
-						<td sec:authorize="hasAuthority('STAGIAIRE')"><a th:href="@{/quiz/do(quizId=${quiz.id})}" th:text="#{quiz.list.start}"></a></td>
+						<td sec:authorize="hasAuthority('STAGIAIRE')">
+							<a th:if="${quiz.available}" th:href="@{/quiz/do(quizId=${quiz.id})}" th:text="#{quiz.list.start}" class="btn-quiz"></a>
+							<svg th:if="${!quiz.available}" class="small-icon icon-done" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+								<path d="M9.917,0.875c-5.086,0-9.208,4.123-9.208,9.208c0,5.086,4.123,9.208,9.208,9.208s9.208-4.122,9.208-9.208 C19.125,4.998,15.003,0.875,9.917,0.875z M9.917,18.141c-4.451,0-8.058-3.607-8.058-8.058s3.607-8.057,8.058-8.057 c4.449,0,8.057,3.607,8.057,8.057S14.366,18.141,9.917,18.141z M13.851,6.794l-5.373,5.372L5.984,9.672
+								c-0.219-0.219-0.575-0.219-0.795,0c-0.219,0.22-0.219,0.575,0,0.794l2.823,2.823c0.02,0.028,0.031,0.059,0.055,0.083
+								c0.113,0.113,0.263,0.166,0.411,0.162c0.148,0.004,0.298-0.049,0.411-0.162c0.024-0.024,0.036-0.055,0.055-0.083l5.701-5.7
+								c0.219-0.219,0.219-0.575,0-0.794C14.425,6.575,14.069,6.575,13.851,6.794z"></path>
+							</svg>
+						</td>
 					</tr>
 				</tbody>
 			</table>
+			<div th:if="${listOfQuizzes.isEmpty()}" class="table-empty centered" th:text="#{quiz.list.empty}"></div>
 		</div>
 	</div>
+	<th:block id="quiz-list-js">
+		<script th:src="@{/js/dropdown.js}"></script>
+		<script th:src="@{/js/message.js}"></script>
+	</th:block>
 </body>
 </html>

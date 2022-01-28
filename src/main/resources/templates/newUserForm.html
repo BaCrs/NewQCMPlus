@@ -17,29 +17,33 @@
 			<form method="post" th:action="@{/user/create}" th:object="${user}">
 				<div class="form-row">
 					<label for="user-firstname" class="form-label" th:text="#{user.form.firstname.label} + ' :' "></label>
-					<input id="user-firstname" class="form-input" type="text" th:field="*{firstname}" name="prenom" th:placeholder="#{user.form.firstname.label}" required>
+					<input id="user-firstname" class="form-input" type="text" th:field="*{firstname}" th:placeholder="#{user.form.firstname.label}">
+					<small id="firstnameHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></small>
 				</div>
 				<div class="form-row">
 					<label for="user-lastname" class="form-label" th:text="#{user.form.lastname.label} + ' :' "></label>
-					<input id="user-lastname" class="form-input" type="text" th:field="*{lastname}" name="nom" th:placeholder="#{user.form.lastname.label}" required>
+					<input id="user-lastname" class="form-input" type="text" th:field="*{lastname}"th:placeholder="#{user.form.lastname.label}">
+					<small id="lastnameHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></small>
 				</div>
 				<div class="form-row">
 					<label for="user-company" class="form-label" th:text="#{user.form.company.label} + ' :' "></label>
-					<input id="user-company" class="form-input" type="text" th:field="*{company}" name="societe" th:placeholder="#{user.form.company.label}" required>
+					<input id="user-company" class="form-input" type="text" th:field="*{company}" th:placeholder="#{user.form.company.label}">
+					<small id="companyHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('company')}" th:errors="*{company}"></small>
 				</div>
 				<div class="form-row">
 					<label for="user-username" class="form-label" th:text="#{user.form.username.label} + ' :' "></label>
-					<input id="user-username" class="form-input" type="text" th:field="*{username}" name="identifiant" th:placeholder="#{user.form.username.label}" required>
+					<input id="user-username" class="form-input" type="text" th:field="*{username}" th:placeholder="#{user.form.username.label}">
+					<small id="usernameHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
 				</div>
-				<small id="usernameHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
 				<div class="form-row">
 					<label for="user-password" class="form-label" th:text="#{user.form.password.label} + ' :' " ></label>
-					<input id="user-password" class="form-input" type="password" th:field="*{password}" name="password" th:placeholder="#{user.form.password.label}" required>
+					<input id="user-password" class="form-input" type="password" th:field="*{password}"  th:placeholder="#{user.form.password.label}">
+					<small id="passwordHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
 				</div>
-				<small id="passwordHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('passwordConfirmation')}" th:errors="*{passwordConfirmation}"></small>
 				<div class="form-row">
 					<label for="user-password-confirmation" class="form-label" th:text="#{user.form.password.confirmation.label} + ' :' "></label>
-					<input id="user-password-confirmation" class="form-input" type="password" th:field="*{passwordConfirmation}" th:placeholder="#{user.form.password.label}" required>
+					<input id="user-password-confirmation" class="form-input" type="password" th:field="*{passwordConfirmation}" th:placeholder="#{user.form.password.label}">
+					<small id="passwordConfirmationHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('passwordConfirmation')}" th:errors="*{passwordConfirmation}"></small>
 				</div>
 				<div class="form-row">
 					<button type="submit" class="btn-primary" th:text="#{common.create}"></button>

@@ -9,6 +9,7 @@ import fr.newqcmplus.validator.PasswordValidator;
 import fr.newqcmplus.validator.QuestionValidator;
 import fr.newqcmplus.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +23,10 @@ import fr.newqcmplus.service.UserService;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -32,6 +36,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class UserController {
 
 	@Autowired
+	private MessageSource messageSource;
+
+	@Autowired
 	private UserService userService;
 
 	@Autowired
@@ -39,7 +46,7 @@ public class UserController {
 
 	@InitBinder("user")
 	protected void initUserBinder(WebDataBinder binder) {
-		binder.setValidator(new UserValidator(userService));
+		binder.addValidators(new UserValidator(userService));
 	}
 
 	@InitBinder("password")
@@ -49,7 +56,16 @@ public class UserController {
 
 	@GetMapping("")
 	public String showAllUsers(Model model) {
-		model.addAttribute("listOfUsers", userService.findAllUsers());
+		List<User> listOfUsers = userService.findAllUsers();
+		int totalAdmin = 0;
+		int totalIntern = 0;
+		for (User user : listOfUsers) {
+			if (user.hasAuthority("ADMIN")) totalAdmin++;
+			if (user.hasAuthority("STAGIAIRE")) totalIntern++;
+		}
+		model.addAttribute("totalAdmin", totalAdmin);
+		model.addAttribute("totalIntern", totalIntern);
+		model.addAttribute("listOfUsers", listOfUsers);
 		return "userList";
 	}
 	
@@ -59,7 +75,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/create")
-	public String saveNewUser(@Validated @ModelAttribute User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+	public String saveNewUser(@Valid @ModelAttribute User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			return "newUserForm";
 		} else {
@@ -73,7 +89,7 @@ public class UserController {
 			user.setAuthorities(authorities);
 			// 4. Save the new user in the database and return back to the list of users.
 			userService.saveUser(user);
-			redirectAttributes.addFlashAttribute("message", "L'utilisateur a été créé avec succès.");
+			redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.user.new", null, Locale.FRENCH));
 			return "redirect:/user";
 		}
 	}
@@ -93,17 +109,21 @@ public class UserController {
 		if (bindingResult.hasErrors()) {
 			return "updateUserForm";
 		} else {
-			// 1. Retrieve the original user information with the id in order to keep the password, authorities and status.
-			User updatedUser = userService.findUserById(user.getId());
-			// 2. Update attributes that can be updated with the form.
-			updatedUser.setFirstname(user.getFirstname());
-			updatedUser.setLastname(user.getLastname());
-			updatedUser.setCompany(user.getCompany());
-			updatedUser.setUsername(user.getUsername());
-			// 3. Save the user in the database and return back to the list of users.
-			userService.saveUser(updatedUser);
-			redirectAttributes.addFlashAttribute("message", "L'utilisateur a été modifié avec succès.");
-			return "redirect:/user";
+			try {
+				// 1. Retrieve the original user information with the id in order to keep the password, authorities and status.
+				User updatedUser = userService.findUserById(user.getId());
+				// 2. Update attributes that can be updated with the form.
+				updatedUser.setFirstname(user.getFirstname());
+				updatedUser.setLastname(user.getLastname());
+				updatedUser.setCompany(user.getCompany());
+				updatedUser.setUsername(user.getUsername());
+				// 3. Save the user in the database and return back to the list of users.
+				userService.saveUser(updatedUser);
+				redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.user.update", null, Locale.FRENCH));
+				return "redirect:/user";
+			} catch (UserNotFoundException e) {
+				throw new ResponseStatusException(NOT_FOUND);
+			}
 		}
 	}
 
@@ -127,7 +147,7 @@ public class UserController {
 			user.setPassword(BCrypt.hashpw(password.getNewPassword(), BCrypt.gensalt()));
 			userService.saveUser(user);
 			redirectAttributes.addAttribute("id", id);
-			redirectAttributes.addFlashAttribute("message", "Le mot de passe a bien été modifié.");
+			redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.password.update", null, Locale.FRENCH));
 			return "redirect:/user/update";
 		}
 	}
@@ -135,7 +155,7 @@ public class UserController {
 	@PostMapping("/delete")
 	public String deleteUser(@RequestParam int id, RedirectAttributes redirectAttributes) {
 		userService.deleteUser(id);
-		redirectAttributes.addFlashAttribute("message", "L'utilisateur a bien été supprimé");
+		redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.user.delete", null, Locale.FRENCH));
 		return "redirect:/user";
 	}
 

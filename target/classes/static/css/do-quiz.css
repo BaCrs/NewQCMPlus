@@ -1,15 +1,35 @@
 .slide {
-font-family: Inter
-    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    padding: 20px 20px 0 20px;
 }
 
 .question-title {
-    padding-bottom: 5px;
+    padding-bottom: 20px;
+    color: var(--grey-dark);
 }
 
 .answer {
+    padding: 10px 5px;
+    color: var(--grey-main);
 }
 
 .answer input[type='checkbox'] {
-    padding-right: 5px;
+    margin-right: 5px;
+}
+
+.buttonset {
+    justify-content: flex-end;
+    padding: 10px;
+}
+
+.buttonset .btn-primary {
+    margin-left: 10px;
+}
+
+#previous-button, #next-button {
+    background-color: var(--primary-main);
+}
+
+#previous-button:hover, #next-button:hover {
+    background-color: var(--primary-light);
 }

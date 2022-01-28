@@ -3,7 +3,7 @@
 <head>
 	<title th:text="#{quiz.do.pageLabel}"></title>
 	<th:block id="do-quiz-css">
-		<link rel="stylesheet" type="text/css" href="../../static/css/do-quiz.css" th:href="@{/css/do-quiz.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/css/do-quiz.css}"/>
 	</th:block>
 </head>
 <body>
@@ -39,7 +39,7 @@
 	</div>
 
 	<th:block id="do-quiz-js">
-		<script type="text/javascript" src="../../static/do-quiz.js" th:src="@{/do-quiz.js}"></script>
+		<script type="text/javascript" th:src="@{/js/do-quiz.js}"></script>
 	</th:block>
 </body>
 </html>

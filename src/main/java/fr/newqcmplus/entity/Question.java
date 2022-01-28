@@ -1,9 +1,12 @@
 package fr.newqcmplus.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -18,13 +21,13 @@ public class Question {
     @Column(name = "id")
     private int id;
 
-    @NonNull
+    @NotBlank(message = "{input.not.blank}")
+    @Size(max = 255, message = "{input.max.255}")
     @Column(name = "title")
     private String title;
 
-    @NonNull
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "question_id", nullable = false)
+    @JoinColumn(name = "question_id")
     private List<Item> items;
 
 }

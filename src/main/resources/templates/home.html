@@ -8,25 +8,22 @@
 	</th:block>
 </head>
 <body>
-	<section id="home-content" class="hero d-flex align-items-center">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6 d-flex flex-column justify-content-center">
-					<h1 th:text="#{home.hero.title}"></h1>
-					<h2 th:text="#{home.hero.subtitle}"></h2>
-					<div>
-						<div class="text-center text-lg-start">
-							<a th:href="@{/quiz}" href="/quiz"
-							   class="btn-get-started d-inline-flex align-items-center justify-content-center align-self-center">
-								<span th:text="#{home.hero.button.quizzes}"></span>
-								<i class="bi bi-arrow-right"></i>
-							</a>
-						</div>
+	<section id="home-content" class="hero align-center">
+		<div class="row">
+			<div class="col">
+				<h1 th:text="#{home.hero.title}"></h1>
+				<h2 th:text="#{home.hero.subtitle}"></h2>
+				<div>
+					<div class="">
+						<a th:href="@{/quiz}" class="btn-get-started align-center">
+							<span th:text="#{home.hero.button.quizzes}"></span>
+							<i class="bi bi-arrow-right"></i>
+						</a>
 					</div>
 				</div>
-				<div class="col-lg-6 hero-img">
-					<img th:src="@{/img/hero-img.png}" src="../../static/img/hero-img.png" class="img-fluid" alt="">
-				</div>
+			</div>
+			<div class="hero-img">
+				<img th:src="@{/img/hero-img.png}" src="../../static/img/hero-img.png" class="img-fluid" alt="">
 			</div>
 		</div>
 	</section>

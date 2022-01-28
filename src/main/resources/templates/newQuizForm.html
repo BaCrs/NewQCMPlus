@@ -19,6 +19,7 @@
 								<label for="quiz-title" th:text="#{quiz.form.title}"></label>
 								<input id="quiz-title" class="form-control" type="text" th:field="*{title}" required>
 							</div>
+							<small id="titleHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></small>
 							<div class="form-group">
 								<label for="quiz-description" th:text="#{quiz.form.description}"></label>
 								<input id="quiz-description" class="form-control" type="text" th:field="*{description}" required>

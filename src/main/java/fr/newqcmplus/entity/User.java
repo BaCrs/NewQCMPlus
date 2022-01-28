@@ -1,15 +1,15 @@
 package fr.newqcmplus.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.*;
-
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name= "users")
@@ -24,24 +24,27 @@ public class User implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
-	@NonNull
+
+	@NotBlank(message = "{input.not.blank}")
+	@Size(max = 255, message = "{input.max.255}")
 	@Column(name = "firstname")
 	private String firstname;
-	
-	@NonNull
+
+	@NotBlank(message = "{input.not.blank}")
+	@Size(max = 255, message = "{input.max.255}")
 	@Column(name = "lastname")
 	private String lastname;
-	
-	@NonNull
+
+	@NotBlank(message = "{input.not.blank}")
+	@Size(max = 255, message = "{input.max.255}")
 	@Column(name = "company")
 	private String company;
-	
-	@NonNull
+
+	@NotBlank(message = "{input.not.blank}")
+	@Size(max = 255, message = "{input.max.255}")
 	@Column(name = "username")
 	private String username;
-	
-	@NonNull
+
 	@Column(name = "password")
 	private String password;
 
@@ -55,19 +58,27 @@ public class User implements Serializable{
 	@Column(name = "enabled")
 	private boolean enabled;
 
-	public String getFullname() {
+	public String getFullName() {
 		return firstname + " " + lastname;
 	}
-	public String getInitial() {
+
+	public String getAvatarName() {
 		return firstname.substring(0, 1).toUpperCase() + lastname.substring(0, 1).toUpperCase();
 	}
 
-	public String getListOfAuthorities() {
+	public String getAuthoritiesName() {
 		String res = "";
 		for (Authority authority : authorities) {
-			res += authority.getName() + ", ";
+			res += authority.getName().toLowerCase() + ", ";
 		}
 		return res.length() >= 2 ? res.substring(0, res.length() - 2) : res;
+	}
+
+	public boolean hasAuthority(String authorityName) {
+		for (Authority authority : authorities) {
+			if (authority.getName().equals(authorityName)) return true;
+		}
+		return false;
 	}
 	
 }
