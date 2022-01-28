@@ -530,3 +530,13 @@ html, body {
     margin-top: 10px
 }
 
+.item {
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.item input[type="text"] {
+    margin-left: 10px;
+    flex-grow: 1;
+}

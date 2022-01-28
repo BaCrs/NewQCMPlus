@@ -513,6 +513,7 @@ html, body {
     height: 100%;
 }
 
+<<<<<<< HEAD
 .hidden {
     display: none;
 }
@@ -530,3 +531,15 @@ html, body {
     margin-top: 10px
 }
 
+=======
+.item {
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.item input[type="text"] {
+    margin-left: 10px;
+    flex-grow: 1;
+}
+>>>>>>> 16d494a0ceba1b9fdb3cb32122d4901afb976cdd
