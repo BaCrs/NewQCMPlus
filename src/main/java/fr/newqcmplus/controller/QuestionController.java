@@ -60,11 +60,11 @@ public class QuestionController {
 		return "newQuestionForm";
 	}
 	
-	@PostMapping("/save")
-	public String saveQuestion(@RequestParam int quizId, @Validated @ModelAttribute Question question, BindingResult bindingResult, Model model) {
+	@PostMapping("/create")
+	public String saveNewQuestion(@RequestParam int quizId, @Validated @ModelAttribute Question question, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("quizId", quizId);
-	      	return "add-question";
+	      	return "newQuestionForm";
 	    }
 		Quiz quiz = quizService.findQuizById(quizId);
 		// On supprime les réponses vides.
@@ -75,20 +75,38 @@ public class QuestionController {
 		// On sauvegarde le quiz pour enregistrer en cascade.
 		System.out.println(quiz);
 		quizService.saveQuiz(quiz);
-		return "redirect:/quiz/update?id=" + quizId;
+		return "redirect:/question?quizId=" + quizId;
 	}
 	
 	@GetMapping("/update")
 	public String showQuestionUpdateForm(@RequestParam int id, @RequestParam int quizId, Model model) {
 		model.addAttribute("quizId", quizId);
 		model.addAttribute("question", questionService.findQuestionById(id));
-		return "add-question";
+		return "updateQuestionForm";
+	}
+	
+	@PostMapping("/update")
+	public String saveUpdateQuestion(@RequestParam int quizId, @Validated @ModelAttribute Question question, BindingResult bindingResult, Model model) {
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("quizId", quizId);
+	      	return "updateQuestionForm";
+	    }
+		Quiz quiz = quizService.findQuizById(quizId);
+		// On supprime les réponses vides.
+		question.getItems().removeIf(item -> item.getTitle() == null || item.getTitle().isBlank());
+		// On ajoute la question au quiz ou on la met à jour si elle existe déjà.
+		quiz.getQuestions().removeIf(q -> q.getId() == question.getId());
+		quiz.getQuestions().add(question);
+		// On sauvegarde le quiz pour enregistrer en cascade.
+		System.out.println(quiz);
+		quizService.saveQuiz(quiz);
+		return "redirect:/question?quizId=" + quizId;
 	}
 	
 	@PostMapping("/delete")
 	public String deleteQuestion(@RequestParam int id, @RequestParam int quizId) {
 		questionService.deleteQuestion(id);
-		return "redirect:/quiz/update?id=" + quizId;
+		return "redirect:/question?quizId=" + quizId;
 	}
 	
 }

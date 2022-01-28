@@ -1,41 +1,56 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="main-layout :: main-fragment(~{::title}, ~{::#question-form-css}, ~{::#question-form-content}, ~{::#new-question-js})">
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="main-layout :: main-fragment(~{::title}, ~{::#question-form-css}, ~{::#question-form-content}, ~{::#new-question-js})">
 <head>
-	<title th:text="#{question.form.pageLabel}"></title>
-	<th:block id="question-form-css">
-		<link rel="stylesheet" type="text/css" href="../../static/css/user-form.css" th:href="@{/css/user-form.css}"/>
-	</th:block>
+<title th:text="#{question.form.pageLabel}"></title>
+<th:block id="question-form-css">
+	<link rel="stylesheet" type="text/css"
+		href="../../static/css/user-form.css" th:href="@{/css/user-form.css}" />
+</th:block>
 </head>
 <body>
 	<div id="question-form-content">
-		<section id="question-form" class="question-form">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-12">
-						<h3 th:text="#{question.form.create.caption}"></h3>
-						<form id="add-question-form" method="post" th:action="@{/question/save(quizId=${quizId})}" th:object="${question}">
-							<input type="hidden" th:field="*{id}">
-							<p>
-								<label>Intitulé : </label><input type="text" th:field="*{title}" required>
-							</p>
-							<h3>Réponses</h3>
-							<span th:if="${#fields.hasErrors('items')}" th:errors="*{items}"></span>
-							<ul >
-								<li th:each="item, itemStat : *{items}" class="item" th:classappend="${itemStat.index<6} ? item-visible : item-hidden">
-									<input type="hidden" th:field="*{items[__${itemStat.index}__].id}">
-									<input type="checkbox" th:field="*{items[__${itemStat.index}__].response}"/>
-									<input type="text" th:field="*{items[__${itemStat.index}__].title}"/>
-								</li>
-							</ul>
-							<div onclick="addItem()">Ajouter une réponse</div>
-							<button type="submit">Envoyer</button>
-						</form>
-		<form method="post" th:action="@{/question/delete(id=${question.id}, quizId=${quizId})}" th:object="${question}">
-			<button type="submit" onClick="return confirm('Etes-vous sûr de vouloir supprimer cette question ?')">Supprimer</button>
-		</form>
+		<div class="card card-small">
+			<div class="row align-center card-header">
+				<h3 th:text="#{question.form.create.caption}"></h3>
+				<a th:href="@{/question(quizId=${quizId})}" class="btn-primary"
+					th:text="#{common.back}"></a>
+			</div>
+			<form id="add-question-form" method="post"
+				th:action="@{/question/create(quizId=${quizId})}"
+				th:object="${question}">
+				<input type="hidden" th:field="*{id}">
+				<div class="form-row">
+					<label for="question-title"
+						th:text="#{question.form.title} + ' :' " class="form-label"></label>
+					<input id="question-title" class="form-input" type="text"
+						th:field="*{title}"
+						th:placeholder="#{question.form.title.placeholder}" required>
+				</div>
+				<div class="form-row">
+					<label class="form-label" th:text="#{quiz.list.items} + ' :' "></label>
+					<span th:if="${#fields.hasErrors('items')}" th:errors="*{items}"></span>
+					<ul>
+						<li th:each="item, itemStat : *{items}" class="item"
+							th:classappend="${itemStat.index<6} ? item-visible : item-hidden">
+							<input type="hidden" th:field="*{items[__${itemStat.index}__].id}"> 
+							<input type="checkbox"
+								th:field="*{items[__${itemStat.index}__].response}" /> <input
+								type="text" th:field="*{items[__${itemStat.index}__].title}"
+								class="form-input" />
+						</li>
+					</ul>
+				</div>
+				<div class="form-row">
+					<!-- <div onclick="addItem()">Ajouter une r�ponse</div>  -->
+					<button type="submit" class="btn-primary" th:text="#{common.save}"></button>
+				</div>
+			</form>
+		</div>
+		<th:block id="new-question-js">
+			<script type="text/javascript" src="../../static/add-question.js"
+				th:src="@{/add-question.js}"></script>
+		</th:block>
 	</div>
-	<th:block id="new-question-js">
-		<script type="text/javascript" src="../../static/add-question.js" th:src="@{/add-question.js}"></script> 
-	</th:block>
 </body>
 </html>

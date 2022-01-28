@@ -12,12 +12,12 @@
 	<div id="question-form-content">
 		<div class="card card-small">
 			<div class="row align-center card-header">
-				<h3 th:text="#{question.form.create.caption}"></h3>
+				<h3 th:text="#{question.form.update.caption}"></h3>
 				<a th:href="@{/question(quizId=${quizId})}" class="btn-primary"
 					th:text="#{common.back}"></a>
 			</div>
-			<form id="add-question-form" method="post"
-				th:action="@{/question/create(quizId=${quizId})}"
+			<form method="post"
+				th:action="@{/question/update(quizId=${quizId})}"
 				th:object="${question}">
 				<input type="hidden" th:field="*{id}">
 				<div class="form-row">
