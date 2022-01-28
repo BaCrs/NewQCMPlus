@@ -304,7 +304,7 @@ nav li:last-child {
     z-index: 1;
 }
 
-.dropdown-content a {
+.dropdown-content a, .dropdown-content form {
     fill: var(--grey-dark);
     color: var(--grey-dark);
     padding: 12px 17px;
@@ -316,8 +316,13 @@ nav li:last-child {
     border-bottom: thin solid var(--grey-extralight);
 }
 
-.dropdown-content a:hover {
+.dropdown-content a:hover, .dropdown-content form:hover {
     background-color: var(--grey-extralight)
+}
+
+button.icon-text {
+    font: inherit;
+    background: inherit;
 }
 
 .show {display:block;}
@@ -423,4 +428,15 @@ form {
     font: 'Inter', sans-serif;
     color: var(--grey-main);
     font-size: 0.95rem;
+}
+
+.item {
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.item input[type="text"] {
+    margin-left: 10px;
+    flex-grow: 1;
 }

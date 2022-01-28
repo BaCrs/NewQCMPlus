@@ -21,7 +21,7 @@
 							<h4 class="question-title" th:text="${question.title}"></h4>
 							<ul>
 								<li th:each="item, itemStat : *{quiz.questions[__${questionStat.index}__].items}" class="answer align-center">
-									<!-- <input type="hidden" th:field="*{quiz.questions[__${questionStat.index}__].items[__${itemStat.index}__].id}"> -->
+									<input type="hidden" th:field="*{quiz.questions[__${questionStat.index}__].items[__${itemStat.index}__].id}">
 									<input type="checkbox" th:field="*{quiz.questions[__${questionStat.index}__].items[__${itemStat.index}__].response}">
 									<label class="item-title" th:text="${item.title}"></label>
 								</li>

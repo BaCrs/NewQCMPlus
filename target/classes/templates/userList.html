@@ -108,11 +108,11 @@
                                 </a>
                                 <form method="post" th:action="@{/user/delete(id=${user.id})}" class="align-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="small-icon">
-                                        <path d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z">
+                                        <path 
+                                        	d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z">
                                         </path>
                                     </svg>
-                                    <button type="submit" onClick="return confirm('Etes-vous sûr de vouloir supprimer cet utilisateur ?')" th:text="#{common.delete}" class="icon-text">
-										
+                                    <button type="submit" onClick="return confirm('Etes-vous sûr de vouloir supprimer cet utilisateur ?')" th:text="#{common.delete}" class="icon-text">	
 									</button>
                                 </form>
                             </div>
