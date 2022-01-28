@@ -43,11 +43,8 @@
 .hero .btn-get-started:hover i {
   transform: translateX(5px);
 }
-.hero .hero-img {
-  text-align: right;
-}
 .hero-img img {
-  max-width: 475px;
+  width: 70vh;
 }
 @media (min-width: 1024px) {
   .hero {
