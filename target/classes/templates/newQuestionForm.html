@@ -13,12 +13,12 @@
 			</div>
 			<form method="post" th:action="@{/question/create(quizId=${quizId})}" th:object="${question}">
 				<div class="form-row">
-					<label for="question-title" th:text="#{question.form.title} + ' :' " class="form-label"></label>
+					<label for="question-title" th:text="#{question.form.title} + ' (*) :' " class="form-label"></label>
 					<input id="question-title" class="form-input" type="text" th:field="*{title}" th:placeholder="#{question.form.title}">
 					<small id="titleHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></small>
 				</div>
 				<div class="form-row">
-					<label class="form-label" th:text="#{question.form.items} + ' :' "></label>
+					<label class="form-label" th:text="#{question.form.items} + ' (*) :' "></label>
 					<ul>
 						<li th:each="item, itemStat : *{items}" class="align-center item" th:classappend="${itemStat.index<2} ? '' : hidden" th:id="${'item-' + itemStat.index}">
 							<input type="hidden" th:field="*{items[__${itemStat.index}__].id}"> 

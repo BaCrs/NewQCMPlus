@@ -9,7 +9,7 @@
     <body>
         <div class="login-wrapper">
             <form class="login form" th:action="@{/login}" method="post">
-                <span class="login__icon" th:text="#{login.icon}"></span>
+                <a th:href="@{/}"><span class="login__icon" th:text="#{login.icon}"></span></a>
                 <h2 class="login__title" th:text="#{login.title}"></h2>
                 <span class="login__error" th:if="${param.error}" th:text="#{login.error}"></span>
                 <span class="login__info" th:if="${param.logout}" th:text="#{login.logout}"></span>

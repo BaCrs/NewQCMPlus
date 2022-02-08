@@ -514,11 +514,7 @@ html, body {
 }
 
 .hidden {
-    display: none;
-}
-
-.item:not() {
-    padding
+    display: none !important;
 }
 
 .item input[type='text'] {

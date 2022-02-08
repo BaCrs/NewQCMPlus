@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,9 +49,7 @@ public class QuestionController {
 	@GetMapping("")
 	public String showAllQuestions(@RequestParam int quizId, Model model) {
 		List<Question> listOfQuestions = quizService.findQuizById(quizId).getQuestions();
-		listOfQuestions.sort((q1, q2) -> {
-			return q1.getId() - q2.getId();
-		});
+		listOfQuestions.sort(Comparator.comparingInt(Question::getId));
 		model.addAttribute("quizId", quizId);
 		model.addAttribute("listOfQuestions", listOfQuestions);
 		return "questionList";
@@ -98,6 +97,7 @@ public class QuestionController {
 		try {
 			Question question = questionService.findQuestionById(id);
 			for (int i = question.getItems().size(); i < MAX_QUESTION_ITEMS; i++) question.getItems().add(new Item());
+			question.getItems().sort(Comparator.comparingInt(Item::getId));
 			model.addAttribute("quizId", quizId);
 			model.addAttribute("question", question);
 			return "updateQuestionForm";

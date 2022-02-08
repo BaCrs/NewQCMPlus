@@ -22,10 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -61,6 +58,7 @@ public class UserController {
 			if (user.hasAuthority("ADMIN")) totalAdmin++;
 			if (user.hasAuthority("STAGIAIRE")) totalIntern++;
 		}
+		listOfUsers.sort(Comparator.comparingInt(User::getId));
 		model.addAttribute("totalAdmin", totalAdmin);
 		model.addAttribute("totalIntern", totalIntern);
 		model.addAttribute("listOfUsers", listOfUsers);

@@ -27,7 +27,8 @@ public class UserValidator implements Validator {
 	@Override
 	public void validate(Object target, Errors errors) {
 		User user = (User) target;
-		if (userService.findUserByUsername(user.getUsername()) != null) {
+		User userWithSameUsername = userService.findUserByUsername(user.getUsername());
+		if (userWithSameUsername != null && !userWithSameUsername.equals(user)) {
 			errors.rejectValue("username", "invalid.user.username");
 		}
 		if (user.getPassword() != null) {

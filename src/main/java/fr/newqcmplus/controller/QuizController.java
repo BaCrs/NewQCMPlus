@@ -26,10 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -53,6 +50,7 @@ public class QuizController {
 		for (Quiz quiz : listOfQuizzes) {
 			quiz.setAvailable(resultService.findResultsByUserAndQuiz(LoginController.getAuthenticatedUser(), quiz).isEmpty());
 		}
+		listOfQuizzes.sort(Comparator.comparingInt(Quiz::getId));
 		model.addAttribute("listOfQuizzes", listOfQuizzes);
 		return "quizList";
 	}

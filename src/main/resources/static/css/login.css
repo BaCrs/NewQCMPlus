@@ -6,6 +6,10 @@
 	font-family: "Noto Sans", sans-serif;
 }
 
+a {
+	text-decoration: none;
+}
+
 body {
     display: flex;
 	justify-content: center;

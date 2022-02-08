@@ -41,7 +41,6 @@ max-width: 550px;
 }
 .hero-img img {
   width: 70vh;
-  flex-grow: 2;
 }
 @media (min-width: 1024px) {
   .hero {
@@ -81,4 +80,5 @@ max-width: 550px;
 }
 #home-content > div {
     width: 100%;
+    padding: 0 100px;
 }
