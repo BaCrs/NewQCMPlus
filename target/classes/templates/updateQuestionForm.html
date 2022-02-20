@@ -23,8 +23,8 @@
 				<ul>
 					<li th:each="item, itemStat : *{items}" class="align-center item" th:classappend="${item.title == null || item.title.isBlank()} ? hidden : ''" th:id="${'item-' + itemStat.index}">
 						<input type="hidden" th:field="*{items[__${itemStat.index}__].id}">
-						<input type="checkbox" th:field="*{items[__${itemStat.index}__].response}" />
-						<input type="text" th:field="*{items[__${itemStat.index}__].title}" class="form-input" />
+						<input type="checkbox" th:field="*{items[__${itemStat.index}__].response}" th:autocomplete=off/>
+						<input type="text" th:field="*{items[__${itemStat.index}__].title}" class="form-input" th:autocomplete=off/>
 					</li>
 				</ul>
 				<small id="itemsHelpBlock" class="form-text text-muted" th:if="${#fields.hasErrors('items')}" th:errors="*{items}"></small>

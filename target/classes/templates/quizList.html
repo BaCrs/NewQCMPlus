@@ -26,7 +26,7 @@
 					<span th:text="#{quiz.list.show.results}"></span>
 				</a>
 			</div>
-			<table>
+			<table th:if="${!listOfQuizzes.isEmpty()}">
 				<thead>
 					<tr>
 						<th th:text="#{quiz.list.title}"></th>

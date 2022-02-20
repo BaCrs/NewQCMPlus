@@ -20,8 +20,6 @@ public class Item {
 	@Column(name = "id")
 	private int id;
 
-	@NotBlank(message = "{input.not.blank}")
-	@Size(max = 255, message = "{input.max.255}")
 	@Column(name = "title")
 	private String title;
 

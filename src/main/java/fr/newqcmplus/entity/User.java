@@ -43,12 +43,14 @@ public class User implements Serializable{
 
 	@NotBlank(message = "{input.not.blank}")
 	@Size(max = 255, message = "{input.max.255}")
-	@Column(name = "username")
+	@Column(name = "username", unique = true)
 	private String username;
 
+	@NotBlank(message = "{input.not.blank}")
 	@Column(name = "password")
 	private String password;
 
+	@NotBlank(message = "{input.not.blank}")
 	@Transient
 	private String passwordConfirmation;
 

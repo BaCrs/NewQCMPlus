@@ -12,10 +12,14 @@ function addItem() {
 }
 
 function removeItem() {
+    console.log(itemsCount);
     if (itemsCount > MIN_ITEMS) {
         itemsCount--;
+        console.log(itemsCount);
+        console.log(document.querySelector(`#item-${itemsCount} input[type='text']`), document.querySelector(`#item-${itemsCount} input[type='checkbox']`));
         document.querySelector(`#item-${itemsCount} input[type='text']`).value = "";
         document.querySelector(`#item-${itemsCount} input[type='checkbox']`).checked = false;
+        console.log(document.querySelector(`#item-${itemsCount} input[type='text']`), document.querySelector(`#item-${itemsCount} input[type='checkbox']`));
         el = document.getElementById(`item-${itemsCount}`);
         el.classList.add("hidden");
     }

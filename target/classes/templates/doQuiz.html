@@ -31,7 +31,7 @@
 				</div>
 				<div class="buttonset row">
 					<div id="previous-button" class="btn-primary hidden" onclick="previous()" th:text="#{common.previous}"></div>
-					<div id="next-button" class="btn-primary" th:classappend="${result.quiz.questions.size() <= 1} ? 'btn-disabled' : ''" onclick="next()" th:text="#{common.next}"></div>
+					<div id="next-button" class="btn-primary" th:classappend="${result.quiz.questions.size() <= 1} ? 'hidden' : ''" onclick="next()" th:text="#{common.next}"></div>
 					<button id="submit-button" class="btn-primary" th:classappend="${result.quiz.questions.size() <= 1} ? '' : 'hidden'" type="submit" th:text="#{common.validate}"></button>
 				</div>
 			</form>

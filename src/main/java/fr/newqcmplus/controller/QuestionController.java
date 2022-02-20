@@ -1,15 +1,18 @@
 package fr.newqcmplus.controller;
 
+import fr.newqcmplus.dao.IItemDAO;
 import fr.newqcmplus.entity.Item;
 import fr.newqcmplus.entity.Question;
 import fr.newqcmplus.entity.Quiz;
 import fr.newqcmplus.exception.QuestionNotFoundException;
 import fr.newqcmplus.exception.QuizNotFoundException;
+import fr.newqcmplus.service.ItemService;
 import fr.newqcmplus.service.QuestionService;
 import fr.newqcmplus.service.QuizService;
 import fr.newqcmplus.validator.QuestionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,6 +43,9 @@ public class QuestionController {
 
 	@Autowired
 	private QuizService quizService;
+
+	@Autowired
+	private ItemService itemService;
 
 	@InitBinder()
 	protected void initBinder(WebDataBinder binder) {
@@ -97,7 +103,11 @@ public class QuestionController {
 		try {
 			Question question = questionService.findQuestionById(id);
 			for (int i = question.getItems().size(); i < MAX_QUESTION_ITEMS; i++) question.getItems().add(new Item());
-			question.getItems().sort(Comparator.comparingInt(Item::getId));
+			question.getItems().sort((i1, i2) -> {
+				if (i1.getId() == 0) return 1;
+				if (i2.getId() == 0) return -1;
+				return i1.getId() - i2.getId();
+			});
 			model.addAttribute("quizId", quizId);
 			model.addAttribute("question", question);
 			return "updateQuestionForm";
@@ -115,6 +125,14 @@ public class QuestionController {
 			try {
 				Quiz quiz = quizService.findQuizById(quizId);
 				// Delete null or blank answers.
+				List<Item> itemsToDelete = new ArrayList<>();
+				for (Item item : question.getItems()) {
+					if (item.getId() != 0 && (item.getTitle() == null || item.getTitle().isBlank())) {
+						try {
+							itemService.deleteItem(item.getId());
+						} catch (EmptyResultDataAccessException e) {}
+					}
+				}
 				question.getItems().removeIf(item -> item.getTitle() == null || item.getTitle().isBlank());
 				// Add question to quiz or update it if it already exists.
 				quiz.getQuestions().removeIf(q -> q.getId() == question.getId()); // Delete & add instead of update
@@ -122,7 +140,7 @@ public class QuestionController {
 				// Save the quiz to save the questions and redirect back to the list of questions.
 				quizService.saveQuiz(quiz);
 				redirectAttributes.addAttribute("quizId", quizId);
-				redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.question.new", null, Locale.FRENCH));
+				redirectAttributes.addFlashAttribute("message", messageSource.getMessage("message.question.update", null, Locale.FRENCH));
 				return "redirect:/question";
 			} catch (QuizNotFoundException e) {
 				throw new ResponseStatusException(NOT_FOUND);

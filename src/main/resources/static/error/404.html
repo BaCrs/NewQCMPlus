@@ -1,10 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>404 error</title>
+	<meta charset="UTF-8">
+	<title>Erreur 404</title>
+	<style>
+		html,
+		body {
+		  width: 100%;
+		  height: 100%;
+		  padding: 0;
+		  margin: 0;
+		  background-color: #1d1858;
+		  font-family: sans-serif;
+		}
+
+		#wrapper {
+		  padding-top: calc(50vh - 7.5vmin);
+		}
+
+		#error {
+		  width: 90vmin;
+		  height: 15vmin;
+		  padding: 0;
+		  margin: 0 auto;
+		  background-color: white;
+		  color: #1d1858;
+		  font-size: 20vmin;
+		  line-height: 20vmin;
+		  overflow: hidden;
+		}
+		#error h1 {
+		  padding: 0;
+		  margin: 0;
+		  text-align: center;
+		  position: relative;
+		  top: -2vmin;
+		}
+		.subtitle {
+		  text-align: center;
+		  color: rgba(255, 255, 255, 0.8);
+		  padding: 0;
+		  margin: 0 auto;
+		  margin-top: 2vmin;
+		  font-size: 5vmin;
+		  font-weight: bold;
+		}
+		.subtitle a {
+			text-decoration: none;
+			color: inherit;
+			font-size: 20px;
+		}
+	</style>
 </head>
 <body>
-	Error 404, not found buddy!
+<div id="wrapper">
+	<div id="error">
+		<h1>404</h1>
+	</div>
+	<p class="subtitle">Page non trouvée</p>
+	<p class="subtitle"><a href="/">Retour à l'accueil</a></p>
+</div>
 </body>
 </html>

@@ -24,6 +24,7 @@
 
 .buttonset .btn-primary {
     margin-left: 10px;
+    width: fit-content;
 }
 
 #previous-button, #next-button {
